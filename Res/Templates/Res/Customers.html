@@ -1,0 +1,238 @@
+{%extends 'main.html'%}
+{%block content%}
+
+{%if chart == '1'%}
+<br><br><br>
+
+<div >
+  <ul class="slides-container">
+    <li class="text-center">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+<div>
+  <canvas id="myChart"></canvas>
+
+</div>
+<!--Chart-->
+<script>
+  //x axis data
+  const labels  = [ 
+    "joined month",
+   '{{monthlist.4}}' ,
+   '{{monthlist.3}}' ,
+   '{{monthlist.2}}' ,
+   '{{monthlist.1}}' ,
+   '{{monthlist.0}}' ,
+  ];
+ //  y axi's with x axi's connection
+  const data = {
+    labels: labels,
+    datasets: [{
+      label: 'Number Of Users',
+      backgroundColor: 'rgb(255, 99, 132)',
+      borderColor: 'rgb(255, 99, 132)',
+      data: [0,{{users1.4}}, {{users1.3}}, {{users1.2}}, {{users1.1}}, {{users1.0}}],
+    }]
+  };
+  //config part 
+  const config = {
+    type: 'line',
+    data: data,
+    options: {}
+  };
+
+  const myChart = new Chart(
+    document.getElementById('myChart'),
+    config
+  );
+</script>
+
+</div></div>
+</div></div>
+<br>
+
+<div class="col-md-4">
+<p style = "text-align:Center;"><a style="color:black" class="btn btn-lg btn-circle btn-outline-new-white" href="{%url 'CustomersChart2'%}">Chart 2</a></p>
+</div>
+<div class="col-md-4">
+<p style = "text-align:Center;"><a style="color:black" class="btn btn-lg btn-circle btn-outline-new-white" href="{%url 'CustomersChart2'%}">Table Details</a></p>
+</div>
+<div class="col-md-4">
+<p style = "text-align:Center;"><a style="color:black" class="btn btn-lg btn-circle btn-outline-new-white" href="{%url 'CustomersChart3'%}">Chart 3</a></p>
+</div>
+<br><br>
+
+{%for user in users%}<br>
+<a href="{%url 'CustomerDetails' user.id%}">{{user.email}}</a>
+{%endfor%}
+{%elif chart == '2'%}
+<br><br><br>
+
+<div >
+  <ul class="slides-container">
+    <li class="text-center">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+<div>
+  <canvas id="myChart"></canvas>
+
+</div>
+<!--Chart-->
+<script>
+  //x axis data
+  const labels  = [ 
+    "joined month",
+   '{{monthlist.4}}' ,
+   '{{monthlist.3}}' ,
+   '{{monthlist.2}}' ,
+   '{{monthlist.1}}' ,
+   '{{monthlist.0}}' ,
+  ];
+ //  y axi's with x axi's connection
+  const data = {
+    labels: labels,
+    datasets: [{
+      label: 'Number Of Users',
+      backgroundColor: 'rgb(255, 99, 132)',
+      borderColor: 'rgb(255, 99, 132)',
+      data: [0,{{users1.4}}, {{users1.3}}, {{users1.2}}, {{users1.1}}, {{users1.0}}],
+    }]
+  };
+  //config part 
+  const config = {
+    type: 'bar',
+    data: data,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Graph 2'
+        }
+      }
+    },
+  };
+
+  const myChart = new Chart(
+    document.getElementById('myChart'),
+    config
+  );
+</script>
+
+</div></div>
+</div></div>
+<br>
+
+
+<div class="col-md-4">
+  <p style = "text-align:Center;"><a style="color:black" class="btn btn-lg btn-circle btn-outline-new-white" href="{%url 'Customers'%}">Chart 1</a></p>
+  </div>
+  <div class="col-md-4">
+  <p style = "text-align:Center;"><a style="color:black" class="btn btn-lg btn-circle btn-outline-new-white" href="{%url 'CustomersChart2'%}">Table Details</a></p>
+  </div>
+  <div class="col-md-4">
+  <p style = "text-align:Center;"><a style="color:black" class="btn btn-lg btn-circle btn-outline-new-white" href="{%url 'CustomersChart3'%}">Chart 3</a></p>
+  </div>
+<br><br>
+
+  {%for user in users%}<br>
+    <a href="{%url 'CustomerDetails' user.id%}">{{user.email}}</a>
+  {%endfor%}
+
+
+{%elif chart == '3'%}
+<br><br>
+
+<div>
+  <ul class="slides-container">
+    <li class="text-center">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-2">
+          </div>
+          <div class="col-md-8">
+            <div>
+              <canvas  id="myChart"></canvas>
+            </div>
+<!--Chart-->
+<script>
+  //x axis data
+  const labels  = [ 
+    "joined month",
+   '{{monthlist.4}}' ,
+   '{{monthlist.3}}' ,
+   '{{monthlist.2}}' ,
+   '{{monthlist.1}}' ,
+   '{{monthlist.0}}' ,
+  ];
+ //  y axi's with x axi's connection
+  const data = {
+    labels: labels,
+    datasets: [{
+      label: 'Number Of Users',
+      backgroundColor: 'rgb(255, 99, 132)',
+      borderColor: 'rgb(255, 99, 132)',
+      data: [0,{{users1.4}}, {{users1.3}}, {{users1.2}}, {{users1.1}}, {{users1.0}}],
+    }]
+  };
+  //config part 
+  const config = {
+    type: 'polarArea',
+    data: data,
+    options: {
+      responsive: true,
+      scales: {
+        r: {
+          pointLabels: {
+            display: true,
+            centerPointLabels: true,
+            font: {
+              size: 18
+            }
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+         
+        }
+      }
+    },
+  };
+
+  const myChart = new Chart(
+    document.getElementById('myChart'),
+    config
+  );
+</script>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
+
+  <div class="col-md-4">
+      <p style = "text-align:Center;"><a style="color:black" class="btn btn-lg btn-circle btn-outline-new-white" href="{%url 'Customers'%}">Chart 1</a></p>
+  </div>
+  <div class="col-md-4">
+      <p style = "text-align:Center;"><a style="color:black" class="btn btn-lg btn-circle btn-outline-new-white" href="{%url 'CustomersChart2'%}">Table Details</a></p>
+  </div>
+  <div class="col-md-4">
+      <p style = "text-align:Center;"><a style="color:black" class="btn btn-lg btn-circle btn-outline-new-white" href="{%url 'CustomersChart2'%}">Chart 2</a></p>
+  </div>
+<br><br><br><br><br><br>
+
+
+{%endif%}
+{%endblock%}

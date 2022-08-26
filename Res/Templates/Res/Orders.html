@@ -1,0 +1,11 @@
+{%extends 'main.html'%}
+{%block content%}
+
+<br><br><br>
+{%for order in orders%}<br>
+<a href="{%url 'OrderDetails' order.id%}">{{order.id}}<a>
+{%endfor%}
+
+
+
+{%endblock%}

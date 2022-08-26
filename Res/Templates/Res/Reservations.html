@@ -1,0 +1,10 @@
+{%extends 'main.html'%}
+{%block content %}
+<br><br><br>
+
+{%for Reservation in Reservations%}<br>
+<a href="{%url 'ReservationDetails' Reservation.id%}">{{Reservation.user}}<a>
+{%endfor%}
+
+
+{%endblock%}

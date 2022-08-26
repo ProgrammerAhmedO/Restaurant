@@ -1,0 +1,277 @@
+{%extends 'main.html'%}
+{%block content%}
+
+<br><br><br>
+{%if Page == 'reservation' %}
+<body>
+<br>
+<div class="container bootdey">  
+<div class="col-md-12">  
+    <div class="col-md-4">      
+        <div class="portlet light profile-sidebar-portlet bordered">
+            <div class="profile-userpic">
+                <img src="{{request.user.pic.url}}" class="img-responsive" alt=""> </div>
+            <div class="profile-usertitle">
+                <div class="profile-usertitle-name"> @{{request.user.username}} </div>
+                <div class="profile-usertitle-job"> {{request.user.Email}} </div>
+            </div>
+            <div class="profile-userbuttons">
+                <a href="{%url 'edit_profile' %}">
+               
+                <button type="button" class="btn btn-info  btn-sm">edit profile</button>
+            </div>
+            <div class="profile-usermenu">
+                <ul class="nav">
+                    <li class="active">
+                        <a href="#">
+                            <i class="icon-home"></i> Reservation List </a>
+                    </li>
+                    <li>
+                        <a href="{%url 'reservation'%}">
+                            <i class="icon-settings"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                    </li>
+                    <li>
+                        <a href="{%url 'profile_orders'%}">
+                            <i class="icon-info"></i>   Orders </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8"> 
+        <div class="portlet light bordered">
+            <div class="portlet-title tabbable-line">
+                <div class="caption caption-md">
+                    <i class="icon-globe theme-font hide"></i>
+                    <span class="caption-subject font-blue-madison bold uppercase">Reservation List</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Members</th>
+                            <th>Reservation Time</th>
+                            <th>Table Number</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for reserve in reservation%}
+                        <tr class="active">
+                            <th scope="row">{{reserve.created|timesince}} ago</th>
+                            <td>{{reserve.members}}</td>
+                            <td>{{reserve.Reservation_time}}</td>
+                            <td>{{reserve.table_number}}</td>
+                        </tr>
+
+                        {%endfor%}
+                        
+                    </tbody>
+                    
+                </table>
+                <p style="text-align:Center;text-color:black;" ><a class="btn btn-lg btn-circle" href="{%url 'reservation'%}">Reservation</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{%elif Page == 'orders' %}
+<body>
+    <br>
+    <div class="container bootdey">  
+    <div class="col-md-12">  
+        <div class="col-md-4">      
+            <div class="portlet light profile-sidebar-portlet bordered">
+                <div class="profile-userpic">
+                    <img src="{{request.user.pic.url}}" class="img-responsive" alt=""> </div>
+                <div class="profile-usertitle">
+                    <div class="profile-usertitle-name"> @{{request.user.username}} </div>
+                    <div class="profile-usertitle-job"> {{request.user.Email}} </div>
+                </div>
+                <div class="profile-userbuttons">
+                    <a href="{%url 'edit_profile' %}">
+                   
+                    <button type="button" class="btn btn-info  btn-sm">edit profile</button>
+                </div>
+                <div class="profile-usermenu">
+                    <ul class="nav">
+                        <li>
+                            <a href="{%url 'profile_reservation' %}">
+                                <i class="icon-home"></i> Reservation List </a>
+                        </li>
+                        <li>
+                            <a href="{%url 'reservation'%}">
+                                <i class="icon-settings"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                        </li>
+                        <li  class="active" >
+                            <a href="{%url 'profile_orders'%}">
+                                <i class="icon-info"></i>   Orders </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8"> 
+            <div class="portlet light bordered">
+                <div class="portlet-title tabbable-line">
+                    <div class="caption caption-md">
+                        <i class="icon-globe theme-font hide"></i>
+                        <span class="caption-subject font-blue-madison bold uppercase">Orders List</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Items</th>
+                                <th>Quantity</th>
+                                <th>Total Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {%for order in orders%}
+                            <tr class="active">
+                                <th scope="row">{{order.created|timesince}} ago</th>
+                                <td>{{order.items}}</td>
+
+                                <td>{{order.quantity}}</td>
+                                <td>{{order.total_price}}</td>
+                            </tr>
+    
+                            {%endfor%}
+                            
+                        </tbody>
+                        
+                    </table>
+                    <p style="text-align:Center;text-color:black;" ><a class="btn btn-lg btn-circle" href="{%url 'menu'%}">Order</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+{%elif Page == 'edit'%}
+<body>
+    <br>
+    <div class="container bootdey">  
+    <div class="col-md-12">  
+        <div class="col-md-4">      
+            <div class="portlet light profile-sidebar-portlet bordered">
+                <div class="profile-userpic">
+                    <img src="{{request.user.pic.url}}" class="img-responsive" alt=""> </div>
+                <div class="profile-usertitle">
+                    <div class="profile-usertitle-name"> @{{request.user.username}} </div>
+                    <div class="profile-usertitle-job"> {{request.user.Email}} </div>
+                </div>
+                <div class="profile-userbuttons">
+                    <a href="{%url 'edit_profile' %}">
+                   
+                    <button type="button" class="btn btn-info  btn-sm">edit profile</button>
+                </div>
+                <div class="profile-usermenu">
+                    <ul class="nav">
+                        <li>
+                            <a href="{%url 'profile_reservation'%}">
+                                <i class="icon-home"></i> Reservation List </a>
+                        </li>
+                        <li>
+                            <a href="{%url 'reservation'%}">
+                                <i class="icon-settings"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                        </li>
+                        <li>
+                            <a href="{%url 'profile_orders'%}">
+                                <i class="icon-info"></i>   Orders </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8"> 
+            <div class="portlet light bordered">
+                <div class="portlet-title tabbable-line">
+                    <div class="caption caption-md">
+                        <i class="icon-globe theme-font hide"></i>
+                        <span class="caption-subject font-blue-madison bold uppercase">Edit Profile</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                   
+                    
+                    <form  method="post" action="" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                        <div class="col-md-6">
+                            
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="input_date" > {{Form.first_name.label}}</label>
+                                    <p id="input_date" type="text" placeholder="date" >{{Form.first_name}}</p>
+                                    <div class="help-block with-errors"></div>
+                                </div>                                 
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="input_pic" > picture</label>
+                                    <p id="input_pic" name="table_number" placeholder="Table Number" >{{Form.pic}}</p>
+                                    <div class="help-block with-errors"></div>
+                                </div>                                 
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="input_location" > {{Form.location.label}}</label>
+                                    <p id="input_location" name="table_number" placeholder="Table Number">{{Form.location}}
+                                    <div class="help-block with-errors"></div>
+                                </div>                                 
+                            </div>
+                        </div>
+                            <div class="col-md-6">
+                               
+                                <div class="col-md-12">
+                                    <label for="name" > {{Form.last_name.label}}</label>
+                                        <p type="text"  id="name" value="{{request.user.name}}" name="name" placeholder="Your Name" required data-error="Please enter your name">{{Form.last_name}}</p>
+                                        <div class="help-block with-errors"></div>
+                                                                   
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="email" > {{Form.Email.label}}</label>
+                                        <p type="text" placeholder="Your Email" value="{{request.user.Email}}" id="email" name="email" required data-error="Please enter your email">{{Form.Email}}</p>
+                                        <div class="help-block with-errors"></div>
+                                    </div> 
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="phone" > {{Form.phone_number.label}}</label>
+                                        <p type="text" placeholder="Your Numbar" id="phone"  name="phone" required data-error="Please enter your Numbar">{{Form.phone_number}}</p>
+                                        <div class="help-block with-errors"></div>
+                                    </div> 
+                                </div>
+                            </div>
+                           
+                            <div class="col-md-12">
+                                <div class="submit-button text-center">
+                                    <input class="btn btn-common"  type="submit" value="Update">
+                                   
+                                 
+                                </div>
+                            </div>
+                        </div>            
+                    </form>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+{%endif%}
+</body>
+</html>
+
+{%endblock%}

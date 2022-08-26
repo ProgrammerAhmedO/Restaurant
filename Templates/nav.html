@@ -1,0 +1,106 @@
+{%load static %}
+<!DOCTYPE html>
+<html lang="en"><!-- Basic -->
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">   
+   
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+ 
+     <!-- Site Metas -->
+    <title>Yamifood Restaurant</title>  
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Site Icons -->
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico'%}" type="image/x-icon">
+    <link rel="apple-touch-icon" href="{%static 'images/apple-touch-icon.png'%}">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}">   
+	{% comment %} <link rel = "stylesheet" herf="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"> {% endcomment %}
+
+	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<!-- Site CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css'%}">    
+    <link rel="stylesheet" href="{% static 'css/profile.css'%}">    
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="{%static 'css/responsive.css'%}">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{%static 'css/custom.css'%}">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+	<!-- Start header -->
+	<header class="top-navbar">
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<div class="container">
+				{% comment %} <a class="navbar-brand" href="{% url 'index'%}">
+					{% comment %} <img src="{%static 'images/logo.png'%}" alt="" /> 
+				</a>{% endcomment %}
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<button class="navbar-toggler"  type="button" data-toggle="collapse" data-target="#navbars-rs-food" aria-controls="navbars-rs-food" aria-expanded="false" aria-label="Toggle navigation">
+				  <span class="navbar-toggler-icon"></span>
+				</button>
+				{%if role == "guest" or role == None%}
+				<div class="collapse navbar-collapse" id="navbars-rs-food" >
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item "><a class="nav-link" href="{%url 'index'%}">Home</a></li>
+						<li class="nav-item"><a class="nav-link" href="{%url 'menu'%}">Menu</a></li>
+						<li class="nav-item"><a class="nav-link" href="{%url 'about'%}">About</a></li>
+						<li class="nav-item dropdown">
+							
+							<a class="nav-link dropdown-toggle"
+							 data-bs-toggle="dropdown" aria-expanded="false">Pages</a>
+
+							<div class="dropdown-menu" aria-labelledby="dropdown-a">
+								<a class="dropdown-item" href="{% url 'reservation'%}">Reservation</a>
+								<a class="dropdown-item" href="{% url 'stuff'%}">Stuff</a>
+								<a class="dropdown-item" href="{%url 'gallery'%}">Gallery</a>
+							</div>
+							
+						</li>
+						<li class="nav-item"><a class="nav-link" href="{% url 'blog'%}">blog</a></li>
+
+						</li>
+						<li class="nav-item"><a class="nav-link" href="{%url 'contact'%}">Contact</a></li>
+						{%if request.user.is_authenticated %}
+						<li class="nav-item"><a class="nav-link" href="{%url 'profile_reservation'%}">Profile</a></li>
+						<li class="nav-item"><a class="nav-link" href="{%url 'cart'%}">Cart</a></li>
+
+						<li class="nav-item"><a class="nav-link" href="{%url 'logout'%}">logout</a></li>
+						
+						{%else%}
+						<li class="nav-item"><a class="nav-link" href="{%url 'login'%}">login</a></li>
+						{%endif%}
+					{%else%}
+					<li class="nav-item"><a class="nav-link" href="{%url 'Reservations'%}">Reservation List</a></li>
+					<li class="nav-item"><a class="nav-link" href="{%url 'orders'%}">Orders List</a></li>
+					<li class="nav-item"><a class="nav-link" href="{%url 'Customers'%}">Customers</a></li>
+					<li class="nav-item"><a class="nav-link" href="{%url 'logout'%}">logout</a></li>
+					{%endif%}
+					</ul>
+				</div>
+			</div>
+		</nav>
+		{% comment %} <style>
+			.center{
+				maregin
+			}
+
+		</style> {% endcomment %}
+	</header>
+	<!-- End header -->
+

@@ -1,0 +1,9 @@
+{%extends 'main.html'%}
+{%block content%}
+<br><br><br><br><br><br>
+{{Reservation.user}}<br>
+{{Reservation.created|timesince}}<br>
+{{Reservation.members}}<br>
+{{Reservation.table_number}}<br>
+
+{%endblock%}
