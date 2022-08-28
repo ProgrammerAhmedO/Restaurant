@@ -87,3 +87,8 @@ class Contact(models.Model):
     def __str__(self):
         return self.message[0:20]
 
+class ToDoList(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    body = models.CharField(max_length=500)
+    compeleted = models.BooleanField(default=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)

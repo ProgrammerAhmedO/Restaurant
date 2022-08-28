@@ -393,6 +393,9 @@ def DashBoard(request):
     lastmonthcustomers = User.objects.filter(date_joined__month = int(thisMonth) - 1).count()
     customerpircentage = int(thismonthcustomers /lastmonthcustomers *100 ) -100
     #__________________________________________________________ 
+    #passen data
+    reservations = Reservation.objects.all()
+    #__________________________________________________________ 
 
     todayReservations = Reservation.objects.filter(created__day = today).count()
     yesterdayReservation = Reservation.objects.filter(created__day = today -1).count()
@@ -401,12 +404,30 @@ def DashBoard(request):
     Reservationpircentage = int(todayReservations /yesterdayReservation *100 ) -100
 
     #__________________________________________________________ 
+    q = request.POST.get('search')
+    if request.method == "POST":
+        if q.capitalize() == 'Dashboard' or q.capitalize()  == 'Board':
+            return redirect ('DashBoard')
+        elif q.capitalize() == 'Chart' or q.capitalize() == 'Graph' :
+            return redirect ('chart')
+        elif q.capitalize() == 'Reservation' or q.capitalize() == 'Reservations' :
+            return redirect ('ReservationTables')
+
+    #__________________________________________________________ 
+    #manage todo list
+    todo = request.POST.get('todo')
+    ToDoList.objects.create(
+        user = request.user,
+        body = todo
+    )
+    #__________________________________________________________ 
 
     context = {
     "dailyPrice":dailyPrice,"percentage":percentage
     ,"monthlypercentage":monthlypercentage,"monthlyPrice":monthlyPrice,
     "customerpircentage":customerpircentage,"thismonthcustomers":thismonthcustomers,
-    "Reservationpircentage":Reservationpircentage,"todayReservations":todayReservations,"user":user
+    "Reservationpircentage":Reservationpircentage,"todayReservations":todayReservations,"user":user,
+    "reservations":reservations,
     }
     return render(request,'Res/DashBoard.html',context)
 
