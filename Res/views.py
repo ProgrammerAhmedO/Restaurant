@@ -1,5 +1,6 @@
 from datetime import datetime
 from multiprocessing import context
+from os import remove
 from urllib import request
 from django.shortcuts import render, redirect
 from .models import *
@@ -77,7 +78,7 @@ def menu(request):
             x = order.quantity 
             x= x+1
             order.quantity = x
-            print(x)
+
             order.save()
             
             return redirect("menu")
@@ -224,13 +225,13 @@ def CustomersView(request):
         monthlyusers = User.objects.filter(date_joined__month=month, date_joined__year=currentyear).count()
         users1.append(monthlyusers)
         monthlist.append(month)
-        print(monthlist)
+
         if month == 1 :
             month = 12
             currentyear = currentyear -1
         else:
             month = month - 1 
-    print(users1)
+
         
     context = {
         "users":users,
@@ -256,13 +257,13 @@ def CustomersChart2(request):
         monthlyusers = User.objects.filter(date_joined__month=month, date_joined__year=currentyear).count()
         users1.append(monthlyusers)
         monthlist.append(month)
-        print(monthlist)
+
         if month == 1 :
             month = 12
             currentyear = currentyear -1
         else:
             month = month - 1 
-    print(users1)
+
         
     context = {
         "users":users,
@@ -287,13 +288,13 @@ def CustomersChart3(request):
         monthlyusers = User.objects.filter(date_joined__month=month, date_joined__year=currentyear).count()
         users1.append(monthlyusers)
         monthlist.append(month)
-        print(monthlist)
+
         if month == 1 :
             month = 12
             currentyear = currentyear -1
         else:
             month = month - 1 
-    print(users1)
+
         
     context = {
         "users":users,
@@ -360,80 +361,212 @@ def chart(request):
     orderitems = []
     for order in orders:
         orderitems.append(order.items.name)
-    print(orderitems)
+
     context = {"orders":orderitems}
     return render(request,"Res/chartjs.html",context)
 
+
+@login_required(login_url='login')
 def DashBoard(request):
     user = request.user
-    thisMonth = datetime.now().month
-    today = datetime.now().day
-    orders = Orders.objects.filter(created__day =today)
-    olddailyPrice = 0
-    dailyPrice = 0
-    for order in orders:
-        price = int(order.quantity * order.items.price)
-        olddailyPrice = dailyPrice
-        dailyPrice = dailyPrice + price
-    print(dailyPrice)
-    print(olddailyPrice)
-    if olddailyPrice == 0 and dailyPrice == 0 :
-        percentage = 0
-    else : 
-        percentage = int(dailyPrice / olddailyPrice  *100 ) -100
-    #__________________________________________________________ 
-    monthlyorders = Orders.objects.filter(created__month = thisMonth) 
-    monthlyPrice = 1
-    for order in monthlyorders:
-        price = int(order.quantity * order.items.price)
-        oldmonthlyPrice = monthlyPrice
-        monthlyPrice = monthlyPrice + price
-    monthlypercentage = int(monthlyPrice  / oldmonthlyPrice *100) -100
-    thismonthcustomers = User.objects.filter(date_joined__month = thisMonth).count()
-    lastmonthcustomers = User.objects.filter(date_joined__month = int(thisMonth) - 1).count()
-    customerpircentage = int(thismonthcustomers /lastmonthcustomers *100 ) -100
-    #__________________________________________________________ 
-    #passen data
-    reservations = Reservation.objects.all()
-    #__________________________________________________________ 
+    print(user)
+    role = str(user.groups.all()[0])
+    print(role)
+    if role != 'Emp':
+        return redirect('index')
+    else:
+    #_____________________________________________________
 
-    todayReservations = Reservation.objects.filter(created__day = today).count()
-    yesterdayReservation = Reservation.objects.filter(created__day = today -1).count()
-    if yesterdayReservation == 0:
-        yesterdayReservation = 1
-    Reservationpircentage = int(todayReservations /yesterdayReservation *100 ) -100
+        thisMonth = datetime.now().month
+        today = datetime.now().day
+        orders = Orders.objects.filter(created__day =today)
+        olddailyPrice = 0
+        dailyPrice = 0
+        for order in orders:
+            price = int(order.quantity * order.items.price)
+            olddailyPrice = dailyPrice
+            dailyPrice = dailyPrice + price
 
-    #__________________________________________________________ 
-    q = request.POST.get('search')
-    if request.method == "POST":
-        if q.capitalize() == 'Dashboard' or q.capitalize()  == 'Board':
-            return redirect ('DashBoard')
-        elif q.capitalize() == 'Chart' or q.capitalize() == 'Graph' :
-            return redirect ('chart')
-        elif q.capitalize() == 'Reservation' or q.capitalize() == 'Reservations' :
-            return redirect ('ReservationTables')
 
-    #__________________________________________________________ 
-    #manage todo list
-    todo = request.POST.get('todo')
-    ToDoList.objects.create(
-        user = request.user,
-        body = todo
-    )
-    #__________________________________________________________ 
+        if olddailyPrice == 0 and dailyPrice == 0 :
+            percentage = 0
+        elif olddailyPrice == 0 and dailyPrice != 0 :
+            olddailyPrice = 1
+            percentage = int(dailyPrice / olddailyPrice  *100 ) -100
+        else : 
+            percentage = int(dailyPrice / olddailyPrice  *100 ) -100
+        #__________________________________________________________ 
+        monthlyorders = Orders.objects.filter(created__month = thisMonth) 
+        monthlyPrice = 1
+        oldmonthlyPrice = 1
+        for order in monthlyorders:
+            price = int(order.quantity * order.items.price)
+            oldmonthlyPrice = monthlyPrice
+            monthlyPrice = monthlyPrice + price
+        monthlypercentage = int(monthlyPrice  / oldmonthlyPrice *100) -100
+        thismonthcustomers = User.objects.filter(date_joined__month = thisMonth).count()
+        lastmonthcustomers = User.objects.filter(date_joined__month = int(thisMonth) - 1).count()
+        customerpircentage = int(thismonthcustomers /lastmonthcustomers *100 ) -100
+        thismonthReservations = Reservation.objects.filter(created__month = thisMonth).count()
+        lastmonthReservations = Reservation.objects.filter(created__month = thisMonth -1).count()
+        if lastmonthReservations == 0:
+            lastmonthReservations = 1
+        monthlyReservationPercentage = int(thismonthReservations /lastmonthReservations *100 ) -100
+        todayorders = Orders.objects.filter(created__day = today).count()
+        lastdayorders = Orders.objects.filter(created__day = today -1 ).count()
+        if lastdayorders == 0 :
+            lastdayorders = 1
+        orderspercentage = int(todayorders /lastdayorders *100 ) -100
+        todayuserjoined = User.objects.filter(date_joined__day = today).count()
+        lastdayuserjoined = User.objects.filter(date_joined__day = today -1 ).count()
+        if lastdayuserjoined == 0 :
+            lastdayuserjoined = 1
+        todayuserspercentage = int(todayuserjoined /lastdayuserjoined *100 ) -100
+        #__________________________________________________________ 
+        #passen data
+        reservations = Reservation.objects.all()
+        #__________________________________________________________ 
 
-    context = {
-    "dailyPrice":dailyPrice,"percentage":percentage
-    ,"monthlypercentage":monthlypercentage,"monthlyPrice":monthlyPrice,
-    "customerpircentage":customerpircentage,"thismonthcustomers":thismonthcustomers,
-    "Reservationpircentage":Reservationpircentage,"todayReservations":todayReservations,"user":user,
-    "reservations":reservations,
-    }
-    return render(request,'Res/DashBoard.html',context)
+        todayReservations = Reservation.objects.filter(created__day = today).count()
+        yesterdayReservation = Reservation.objects.filter(created__day = today -1).count()
+        if yesterdayReservation == 0:
+            yesterdayReservation = 1
+        Reservationpircentage = int(todayReservations /yesterdayReservation *100 ) -100
+
+        #__________________________________________________________ 
+        q = None
+        if request.method == "POST":
+            q = request.POST.get('search')
+            if q is not None:
+                if q.capitalize() == 'Dashboard' or q.capitalize()  == 'Board':
+                    return redirect ('DashBoard')
+                elif q.capitalize() == 'Chart' or q.capitalize() == 'Graph' :
+                    return redirect ('chart')
+                elif q.capitalize() == 'Reservation' or q.capitalize() == 'Reservations' :
+                    return redirect ('ReservationTables')
+
+        #__________________________________________________________ 
+        #manage todo list
+        ##add list item
+        todo = None
+        ListItems = ToDoList.objects.filter(user=user)
+        if request.method == "POST":
+            todo = request.POST.get('todo')
+            if todo != None and todo != "":
+                # checkbox = request.POST.get('checkbox')
+                # print(checkbox)
+                ToDoList.objects.create(
+                    user = request.user,
+                    body = todo
+                )
+                return redirect("DashBoard")
+            todo = None
+        # manage delete item
+
+        itemid = request.GET.get('q')
+        if itemid is not None:
+            item,Notcreated = ToDoList.objects.get_or_create(id=itemid, user=request.user)
+            if Notcreated == False:
+                item.delete()
+            elif Notcreated == True:
+                item.delete()
+
+        #__________________________________________________________ 
+        #User contact part
+        contacts = Contact.objects.all()
+
+        #__________________________________________________________ 
+        #Items part
+        items = Items.objects.all()
+        ordersCount = []
+        ListOfItems = []
+        for item in items:
+            ListOfItems.append(item)
+        print(ListOfItems)
+        for item in ListOfItems:
+            ordersNumber = Orders.objects.filter(items__name=item).count()
+            ordersCount.append(ordersNumber)
+        print(ordersCount)
+        specificuser = User.objects.get(id=1)
+        #read more about location attributes
+        specificuserCuntry = specificuser.location
+        # print(specificuserCuntry)
+        #__________________________________________________________ 
+        #top users
+        ordersPricelist = []
+        userlist = []
+        totalprice = 0
+        users = User.objects.all()
+        UserListCount = 0
+        for user in users:
+            userorders = Orders.objects.filter(user__id = user.id)
+            print(userorders)
+            for order in userorders:
+                print("the order is :",order)
+                orderprice = order.total_price()
+                totalprice = totalprice + orderprice
+            ordersPricelist.append(totalprice)
+            userlist.append(user.id)
+            UserListCount = UserListCount + 1
+            totalprice = 0
+        print("ordersPricelist",ordersPricelist)
+        print("list of users",userlist)
+        print("number of total users",UserListCount)
+        # sortedlist = sorted(BestOrdersPrice, key=abs , reverse=True)
+        index = 0
+        bestuser = 1
+        bestuserslist = []
+        BestOrdersPriceList = []
+        BestOrdersPrice = 0
+        for i in range(UserListCount):
+            BestOrdersPrice = 0
+            print("i=",i)
+            for number in range(len(ordersPricelist) ):
+                print("number=", number)
+                if int(ordersPricelist[number]) > BestOrdersPrice:
+                    bestuser = User.objects.get(id= userlist[number])
+                    BestOrdersPrice = ordersPricelist[number]
+                    index = number 
+            print("index:",index)
+            ordersPricelist.remove(ordersPricelist[index])
+            userlist.remove(userlist[index])
+            bestuserslist.append(bestuser)
+            BestOrdersPriceList.append(BestOrdersPrice)
+            index = 0
+            print("out of loop:","users list",bestuserslist,"price list",BestOrdersPriceList)
+            
+
+
+
+        print( "best users list ", bestuserslist)
+        print("best orders list",BestOrdersPriceList)
+            
+        #__________________________________________________________ 
+        
+
+        context = {
+        "dailyPrice":dailyPrice,"percentage":percentage,
+        "todayorders":todayorders,
+        "todayuserjoined":todayuserjoined,
+        "todayuserspercentage":todayuserspercentage,
+        "orderspercentage":orderspercentage,
+        "monthlypercentage":monthlypercentage,"monthlyPrice":monthlyPrice,
+        "customerpircentage":customerpircentage,
+        "thismonthcustomers":thismonthcustomers,
+        "thismonthReservations":thismonthReservations,
+        "monthlyReservationPercentage":monthlyReservationPercentage,
+        "Reservationpircentage":Reservationpircentage,
+        "todayReservations":todayReservations,"user":request.user,
+        "reservations":reservations,"ListItems":ListItems,
+        "contacts":contacts,"items":items,
+        "ListOfItems":ListOfItems,"bestuser":bestuser,"BestOrdersPrice":BestOrdersPrice,
+        "bestuserslist":bestuserslist,"BestOrdersPriceList":BestOrdersPriceList,
+        }
+        return render(request,'Res/DashBoard.html',context)
 
 def ReservationTables(request):
     reservations = Reservation.objects.all()
-    print(reservations)
+
     context = {"reservations":reservations}
     return render(request,'Res/ReservationTables.html',context)
 

@@ -15,8 +15,10 @@ class User(AbstractUser):
     name = models.CharField(max_length=200, null = True)
     location = PlainLocationField(based_fields=['Cairo'], zoom=7)
     phone_number = PhoneNumberField(null=True)
+    # UserOrders = models.ForeignKey("Orders", related_name=("userorders"),null=True, on_delete= models.CASCADE)
     USERNAME_FIELD = 'Email'
     REQUIRED_FIELDS = []
+    
     def role(self):
         return str(self.groups.all()[0])
 
@@ -51,12 +53,14 @@ class Orders(models.Model):
     def prograss(self):
         return int(self.quantity * self.items.price) * 10
 
+
 class Reservation(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete= models.CASCADE)
     members = models.IntegerField()
     table_number = models.IntegerField(null=True)
     Reservation_time = models.CharField(max_length=200)
+    
     def __str__(self):
         return self.Reservation_time
     def prograss(self):
@@ -88,7 +92,16 @@ class Contact(models.Model):
         return self.message[0:20]
 
 class ToDoList(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True, null=True)
     body = models.CharField(max_length=500)
     compeleted = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.body[0:20]
+    # def compeletedtime(self):
+    #     if self.compeleted == True:
+    #         compeletedTime = datetime.now().minute
+    #     return compeletedTime
+    # def automaticDelete(self, *args , **kwargs):
+    #     if self.compeletedtime == datetime.now().minute + 1 :
+    #         self.delete()
