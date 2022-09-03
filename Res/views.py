@@ -356,14 +356,46 @@ def OrderDetails(request,pk):
     context = {"order":order,"role":role}
     return render(request, 'Res/OrderDetails.html',context)
 
-def chart(request):
-    orders = Orders.objects.all()
-    orderitems = []
-    for order in orders:
-        orderitems.append(order.items.name)
+def OrderCharts(request):
+    ordersCounter = Orders.objects.all().count()
+    items = Items.objects.all()
+    orderItems = []
+    orderData = []
+    for item in items:
+        orderItems.append(item.name)
+        orderData.append( Orders.objects.filter(items__name = item.name).count())
+    print(orderItems)
+    print(orderData)
 
-    context = {"orders":orderitems}
-    return render(request,"Res/chartjs.html",context)
+    context = {"orderItems":orderItems,"orderData":orderData , "ordersCounter":ordersCounter}
+    return render(request,"Res/Charts/OrderCharts.html",context)
+def CustomerCharts(request):
+    AllUsers = User.objects.all().count()
+    currentmonth = datetime.now().month
+    monthes = []
+    monthlyUsers = []
+    for i in range(4,-1,-1):
+        monthes.append(currentmonth - i)
+        monthlyUsers.append(User.objects.filter(date_joined__month = monthes[len(monthes) -1]).count())
+    print(monthes)
+    print(monthlyUsers)
+
+    context = {"monthes":monthes,"monthlyUsers":monthlyUsers , "AllUsers":AllUsers}
+    return render(request,"Res/Charts/CustomerCharts.html",context)
+def ReservationCharts(request):
+    AllReservations = Reservation.objects.all().count()
+    currentmonth = datetime.now().month
+    monthes = []
+    monthlyReservations = []
+    for i in range(4,-1,-1):
+        monthes.append(currentmonth - i)
+        monthlyReservations.append(Reservation.objects.filter(created__month = monthes[len(monthes) -1]).count())
+    print(monthes)
+    print(monthlyReservations)
+
+    context = {"monthes":monthes,"monthlyUsers":monthlyReservations , "AllReservations":AllReservations}
+    return render(request,"Res/Charts/CustomerCharts.html",context)
+
 
 
 @login_required(login_url='login')
@@ -550,7 +582,8 @@ def DashBoard(request):
         "todayuserjoined":todayuserjoined,
         "todayuserspercentage":todayuserspercentage,
         "orderspercentage":orderspercentage,
-        "monthlypercentage":monthlypercentage,"monthlyPrice":monthlyPrice,
+        "monthlypercentage":monthlypercentage,
+        "monthlyPrice":monthlyPrice,
         "customerpircentage":customerpircentage,
         "thismonthcustomers":thismonthcustomers,
         "thismonthReservations":thismonthReservations,

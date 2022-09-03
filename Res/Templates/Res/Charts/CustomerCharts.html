@@ -25,13 +25,13 @@
     var data = {
 
 
-      labels: ["{{orders.0}}","{{orders.1}}",]
+      labels: ["user/month","{{monthes.0}}","{{monthes.1}}","{{monthes.2}}","{{monthes.3}}","{{monthes.4}}"]
 
 ,
       datasets: [{
-        label: 'Order quantitiy',
+        label: 'Customer quantitiy',
         
-        data: [1,2]
+        data: [0,"{{monthlyUsers.0}}","{{monthlyUsers.1}}","{{monthlyUsers.2}}","{{monthlyUsers.3}}","{{monthlyUsers.4}}"]
        ,
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
@@ -113,7 +113,7 @@
     
     var doughnutPieData = {
       datasets: [{
-        data: [30, 40, 30],
+        data: ["{{monthlyUsers.2}}", "{{monthlyUsers.3}}", "{{monthlyUsers.4}}"],
         backgroundColor: [
           'rgba(255, 99, 132, 0.5)',
           'rgba(54, 162, 235, 0.5)',
@@ -134,9 +134,11 @@
   
       // These labels appear in the legend and in the tooltips when hovering different arcs
       labels: [
-        'Pink',
-        'Blue',
-        'Yellow',
+        
+        '{{monthes.2}}',
+        '{{monthes.3}}',
+        '{{monthes.4}}',
+
       ]
     };
     var doughnutPieOptions = {
@@ -147,10 +149,10 @@
       }
     };
     var areaData = {
-      labels: ["{{order}}", "2014", "2015", "2016", "2017"],
+      labels: ["user/month","{{monthes.0}}", "{{monthes.1}}", "{{monthes.2}}", "{{monthes.3}}", "{{monthes.4}}"],
       datasets: [{
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
+        label: '{{AllUsers}} Customers',
+        data: ["{{monthlyUsers.0}}", "{{monthlyUsers.1}}", "{{monthlyUsers.2}}", "{{monthlyUsers.3}}", "{{monthlyUsers.4}}", "{{monthlyUsers.5}}"],
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',
@@ -248,10 +250,10 @@
   
     var scatterChartData = {
       datasets: [{
-          label: 'First Dataset',
+          label: '{{monthes.0}}',
           data: [{
-              x: -10,
-              y: 0
+              x: "{{monthlyUsers.0}}",
+              y: "{{AllUsers}}"
             },
             {
               x: 0,
@@ -275,10 +277,10 @@
           borderWidth: 1
         },
         {
-          label: 'Second Dataset',
+          label: '{{monthes.1}}',
           data: [{
-              x: 10,
-              y: 5
+            x: "{{monthlyUsers.1}}",
+            y: "{{AllUsers}}"
             },
             {
               x: 20,
