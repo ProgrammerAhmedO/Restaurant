@@ -9,6 +9,10 @@ from django.contrib.auth import authenticate,login,logout
 from .forms import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
+import speech_recognition as sr #ML
+from django.db.models import Q
+from geopy.geocoders import Nominatim
+
 
 def Registeration(request):
     page = 'Registeration'
@@ -19,6 +23,7 @@ def Registeration(request):
     if request.method == "POST":
         Form = MyUserCreationForm(request.POST)
         if Form.is_valid():
+            print("gg")
             user = Form.save()
             user.groups.add(group)
             
@@ -33,7 +38,7 @@ def loginPage(request):
     if request.user.is_authenticated:
         return redirect('index')
     if request.method == 'POST':
-        email = request.POST.get('email')
+        email = request.POST.get('Email')
         password = request.POST.get('password')
         
 
@@ -366,6 +371,22 @@ def OrderCharts(request):
         orderData.append( Orders.objects.filter(items__name = item.name).count())
     print(orderItems)
     print(orderData)
+    #_____________________________________________________
+    #search part 
+    if request.method == "POST":
+        search = request.POST.get("search")
+        if search != None:
+            if search.capitalize() == "Order" or search.capitalize() == "Orders":
+                return redirect("OrderTables")
+            elif search.capitalize() == "Reservation" or search.capitalize() == "Reservations":
+                return redirect("ReservationTables")
+            elif search.capitalize() == "Customer" or search.capitalize() == "Customer" or search.capitalize() == "User" or search.capitalize() == "Users":
+                return redirect("OrderTables")
+            elif search.capitalize() == "Graph" or search.capitalize() == "Graphs" or search.capitalize() == "Chart" or search.capitalize() == "Charts":
+                return redirect("OrderCharts")
+            else:
+                return redirect("DashBoard")
+    #_____________________________________________________
 
     context = {"orderItems":orderItems,"orderData":orderData , "ordersCounter":ordersCounter}
     return render(request,"Res/Charts/OrderCharts.html",context)
@@ -379,7 +400,22 @@ def CustomerCharts(request):
         monthlyUsers.append(User.objects.filter(date_joined__month = monthes[len(monthes) -1]).count())
     print(monthes)
     print(monthlyUsers)
-
+    #_____________________________________________________
+    #search part 
+    if request.method == "POST":
+        search = request.POST.get("search")
+        if search != None:
+            if search.capitalize() == "Order" or search.capitalize() == "Orders":
+                return redirect("OrderTables")
+            elif search.capitalize() == "Reservation" or search.capitalize() == "Reservations":
+                return redirect("ReservationTables")
+            elif search.capitalize() == "Customer" or search.capitalize() == "Customer" or search.capitalize() == "User" or search.capitalize() == "Users":
+                return redirect("OrderTables")
+            elif search.capitalize() == "Graph" or search.capitalize() == "Graphs" or search.capitalize() == "Chart" or search.capitalize() == "Charts":
+                return redirect("OrderCharts")
+            else:
+                return redirect("DashBoard")
+    #_____________________________________________________
     context = {"monthes":monthes,"monthlyUsers":monthlyUsers , "AllUsers":AllUsers}
     return render(request,"Res/Charts/CustomerCharts.html",context)
 def ReservationCharts(request):
@@ -392,6 +428,22 @@ def ReservationCharts(request):
         monthlyReservations.append(Reservation.objects.filter(created__month = monthes[len(monthes) -1]).count())
     print(monthes)
     print(monthlyReservations)
+        #_____________________________________________________
+    #search part 
+    if request.method == "POST":
+        search = request.POST.get("search")
+        if search != None:
+            if search.capitalize() == "Order" or search.capitalize() == "Orders":
+                return redirect("OrderTables")
+            elif search.capitalize() == "Reservation" or search.capitalize() == "Reservations":
+                return redirect("ReservationTables")
+            elif search.capitalize() == "Customer" or search.capitalize() == "Customer" or search.capitalize() == "User" or search.capitalize() == "Users":
+                return redirect("OrderTables")
+            elif search.capitalize() == "Graph" or search.capitalize() == "Graphs" or search.capitalize() == "Chart" or search.capitalize() == "Charts":
+                return redirect("OrderCharts")
+            else:
+                return redirect("DashBoard")
+    #_____________________________________________________
 
     context = {"monthes":monthes,"monthlyUsers":monthlyReservations , "AllReservations":AllReservations}
     return render(request,"Res/Charts/CustomerCharts.html",context)
@@ -401,12 +453,37 @@ def ReservationCharts(request):
 @login_required(login_url='login')
 def DashBoard(request):
     user = request.user
-    print(user)
+    # print(user)
     role = str(user.groups.all()[0])
-    print(role)
+    # print(role)
     if role != 'Emp':
         return redirect('index')
     else:
+    #_____________________________________________________
+    #search part 
+        if request.method == "POST":
+            search = request.POST.get("search")
+            if search != None:
+                if search.capitalize() == "Order" or search.capitalize() == "Orders":
+                    return redirect("OrderTables")
+                elif search.capitalize() == "Reservation" or search.capitalize() == "Reservations":
+                    return redirect("ReservationTables")
+                elif search.capitalize() == "Customer" or search.capitalize() == "Customer" or search.capitalize() == "User" or search.capitalize() == "Users":
+                    return redirect("OrderTables")
+                elif search.capitalize() == "Graph" or search.capitalize() == "Graphs" or search.capitalize() == "Chart" or search.capitalize() == "Charts":
+                    return redirect("OrderCharts")
+                else:
+                    return redirect("DashBoard")
+    #_____________________________________________________
+    #best item :
+        users = User.objects.all()
+        usersFavoritItmeList = []
+        for user in users :
+            usersFavoritItmeList.append(user.FavoriteFood())
+        print("users best item list is :",usersFavoritItmeList)
+        mostorder =  max(((item, usersFavoritItmeList.count(item)) for item in set(usersFavoritItmeList)), key=lambda a: a[1])[0]
+        print(mostorder)
+        BestItem = Items.objects.get(name=mostorder)
     #_____________________________________________________
 
         thisMonth = datetime.now().month
@@ -466,22 +543,10 @@ def DashBoard(request):
         Reservationpircentage = int(todayReservations /yesterdayReservation *100 ) -100
 
         #__________________________________________________________ 
-        q = None
-        if request.method == "POST":
-            q = request.POST.get('search')
-            if q is not None:
-                if q.capitalize() == 'Dashboard' or q.capitalize()  == 'Board':
-                    return redirect ('DashBoard')
-                elif q.capitalize() == 'Chart' or q.capitalize() == 'Graph' :
-                    return redirect ('chart')
-                elif q.capitalize() == 'Reservation' or q.capitalize() == 'Reservations' :
-                    return redirect ('ReservationTables')
-
-        #__________________________________________________________ 
         #manage todo list
         ##add list item
         todo = None
-        ListItems = ToDoList.objects.filter(user=user)
+        ListItems = ToDoList.objects.filter(user=request.user)
         if request.method == "POST":
             todo = request.POST.get('todo')
             if todo != None and todo != "":
@@ -514,11 +579,11 @@ def DashBoard(request):
         ListOfItems = []
         for item in items:
             ListOfItems.append(item)
-        print(ListOfItems)
+        # print(ListOfItems)
         for item in ListOfItems:
             ordersNumber = Orders.objects.filter(items__name=item).count()
             ordersCount.append(ordersNumber)
-        print(ordersCount)
+        # print(ordersCount)
         specificuser = User.objects.get(id=1)
         #read more about location attributes
         specificuserCuntry = specificuser.location
@@ -532,18 +597,18 @@ def DashBoard(request):
         UserListCount = 0
         for user in users:
             userorders = Orders.objects.filter(user__id = user.id)
-            print(userorders)
+            # print(userorders)
             for order in userorders:
-                print("the order is :",order)
+                # print("the order is :",order)
                 orderprice = order.total_price()
                 totalprice = totalprice + orderprice
             ordersPricelist.append(totalprice)
             userlist.append(user.id)
             UserListCount = UserListCount + 1
             totalprice = 0
-        print("ordersPricelist",ordersPricelist)
-        print("list of users",userlist)
-        print("number of total users",UserListCount)
+        # print("ordersPricelist",ordersPricelist)
+        # print("list of users",userlist)
+        # print("number of total users",UserListCount)
         # sortedlist = sorted(BestOrdersPrice, key=abs , reverse=True)
         index = 0
         bestuser = 1
@@ -552,30 +617,56 @@ def DashBoard(request):
         BestOrdersPrice = 0
         for i in range(UserListCount):
             BestOrdersPrice = 0
-            print("i=",i)
+            # print("i=",i)
             for number in range(len(ordersPricelist) ):
-                print("number=", number)
+                # print("number=", number)
                 if int(ordersPricelist[number]) > BestOrdersPrice:
                     bestuser = User.objects.get(id= userlist[number])
                     BestOrdersPrice = ordersPricelist[number]
                     index = number 
-            print("index:",index)
+            # print("index:",index)
             ordersPricelist.remove(ordersPricelist[index])
             userlist.remove(userlist[index])
             bestuserslist.append(bestuser)
             BestOrdersPriceList.append(BestOrdersPrice)
             index = 0
-            print("out of loop:","users list",bestuserslist,"price list",BestOrdersPriceList)
+            # print("out of loop:","users list",bestuserslist,"price list",BestOrdersPriceList)
             
 
 
 
-        print( "best users list ", bestuserslist)
-        print("best orders list",BestOrdersPriceList)
+        # print( "best users list ", bestuserslist)
+        # print("best orders list",BestOrdersPriceList)
             
         #__________________________________________________________ 
-        
+        # Voice assistant part
+        # if request.method == "POST":
+        #     listener = sr.Recognizer()
+        #     try:
+        #             print("listining")
+        #             voice = listener.listen(sr.Microphone())
+        #             command = listener.recognize_google(voice)
+        #             print(command)
+        #     except:
+        #         pass
+        #__________________________________________________________ 
+        #location Part
+        # geolocator = Nominatim(user_agent="geoapiExercises")
+        # location = geolocator.reverse(request.user.location)
+        # print(location)
+        # print(request.user.location)
 
+        # address = location.raw['address']
+        # city = address.get('city', '')
+        # state = address.get('state', '')
+        # country = address.get('country', '')
+        # code = address.get('country_code')
+        # zipcode = address.get('postcode')
+        # print('City : ',city)
+        # print('State : ',state)
+        # print('Country : ',country)
+        # print('Zip Code : ', zipcode)
+        #__________________________________________________________ 
         context = {
         "dailyPrice":dailyPrice,"percentage":percentage,
         "todayorders":todayorders,
@@ -583,7 +674,7 @@ def DashBoard(request):
         "todayuserspercentage":todayuserspercentage,
         "orderspercentage":orderspercentage,
         "monthlypercentage":monthlypercentage,
-        "monthlyPrice":monthlyPrice,
+        "monthlyPrice":monthlyPrice,"BestItem":BestItem,
         "customerpircentage":customerpircentage,
         "thismonthcustomers":thismonthcustomers,
         "thismonthReservations":thismonthReservations,
@@ -599,16 +690,42 @@ def DashBoard(request):
 
 def ReservationTables(request):
     reservations = Reservation.objects.all()
-
+    if request.method == "POST":
+        search = request.POST.get("search")
+        if search != None :
+            reservations = Reservation.objects.filter(Q(user__name__icontains=search) | Q(user__Email__icontains=search) |Q(members__icontains=search)|Q(Reservation_time__icontains=search))
     context = {"reservations":reservations}
-    return render(request,'Res/ReservationTables.html',context)
+    return render(request,'Res/Tables/ReservationTables.html',context)
 
 def OrderTables(request):
     orders = Orders.objects.all()
+    # users = User.objects.all()
+    # userTotalPriceList = []
+    # UserList = []
 
-    context = {"orders":orders}
-    return render(request,'Res/OrderTables.html',context)
+    # TotalPrice = 0
+    # for user in users:
+    #     userorders = Orders.objects.filter(user=user)
+    #     print(userorders)
+    #     for price in userorders:
+    #         TotalPrice = TotalPrice + price.total_price()
+    #     UserList.append(user)
+    #     userTotalPriceList.append(TotalPrice)
+    #     TotalPrice = 0
+    if request.method == "POST":
+        search = request.POST.get("search")
+        if search != None :
+            orders = Orders.objects.filter(Q(user__name__icontains=search) | Q(user__Email__icontains=search) |Q(items__name__icontains=search)|Q(created__icontains=search)|Q(quantity__icontains=search))
 
-def jstest(request):
-    order = Orders.objects.get(id=23)
-    return render(request,"static/js/chart.js",{"order":order})
+    context = {"orders":orders,} #"UserList":UserList,"userTotalPriceList":userTotalPriceList,
+    return render(request,'Res/Tables/OrderTables.html',context)
+def CustomerTables(request):
+    users = User.objects.all()
+    if request.method == "POST":
+        search = request.POST.get("search")
+        if search != None :
+            users = User.objects.filter(Q(name__icontains=search) | Q(Email__icontains=search) |Q(phone_number__icontains=search)|Q(date_joined__icontains=search)|Q(orders__id__icontains=search))
+
+    context = {"users":users}
+    return render(request,'Res/Tables/CustomerTables.html',context)
+

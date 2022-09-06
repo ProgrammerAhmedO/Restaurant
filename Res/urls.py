@@ -35,6 +35,7 @@ urlpatterns = [
     path('DashBoard/', views.DashBoard , name ='DashBoard'),
     path('ReservationTables/', views.ReservationTables , name ='ReservationTables'),
     path('OrderTables/', views.OrderTables , name ='OrderTables'),
+    path('CustomerTables/', views.CustomerTables , name ='CustomerTables'),
 
 
     

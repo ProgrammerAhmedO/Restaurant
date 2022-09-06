@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  {%load static%}
+{%include 'Res/AdminHead.html'%}
+  <body>
+    <div class="container-scroller">
+      <!-- partial:../../partials/_sidebar.html -->
+      {%include 'Res/DashBoardNav.html'%}
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_navbar.html -->
+        {%include 'DashBoardNavBar.html'%}
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title"> Reservations Table </h3>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="#">Tables</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Basic tables</li>
+                </ol>
+              </nav>
+            </div>
+            <div class="row">
+              <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Creation Table</h4>
+
+                    </p>
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Customer</th>
+                            <th>ReservationID</th>
+                            <th>Created</th>
+                            <th>Members</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {%for Res in reservations%}
+                          <tr>
+                            <td>{{Res.user.username}}</td>
+                            <td>{{Res.id}}</td>
+                            <td>{{Res.created|timesince}}</td>
+                            {%if Res.members < 3 %}
+                            <td><label class="badge badge-danger">{{Res.members}} members</label></td>
+                            {%elif Res.members > 3 and Res.members < 5%}
+                            <td><label class="badge badge-warning">{{Res.members}} members</label></td>
+                            {%elif Res.members > 5 and Res.members < 7%}
+                            <td><label class="badge badge-success">{{Res.members}} members</label></td>
+                            {%elif Res.members > 7 %}
+                            <td><label class="badge badge-info">{{Res.members}} members</label></td>
+                            {%else%}
+                            <td><label class="badge badge-danger">Unknown</label></td>
+                            {%endif%}
+                          </tr>
+                          {%endfor%}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Detail Table</h4>
+
+                    </p>
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>User</th>
+                            <th>Table Number</th>
+                            <th>Reservation Time</th>
+                            <th>Members</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {%for Res in reservations%}
+                          <tr>
+                            <td>{{Res.user.email}}</td>
+                            <td>{{Res.table_number}}</td>
+                            <td>{{Res.Reservation_time}} <i class="mdi mdi-arrow-down"></i></td>
+
+                            {%if Res.members < 3 %}
+                            <td><label class="badge badge-danger">{{Res.members}} members</label></td>
+                            {%elif Res.members > 3 and Res.members < 5%}
+                            <td><label class="badge badge-warning">{{Res.members}} members</label></td>
+                            {%elif Res.members > 5 and Res.members < 7%}
+                            <td><label class="badge badge-success">{{Res.members}} members</label></td>
+                            {%elif Res.members > 7 %}
+                            <td><label class="badge badge-info">{{Res.members}} members</label></td>
+                            {%else%}
+                            <td><label class="badge badge-danger">Unknown</label></td>
+                            {%endif%}
+
+                          </tr>
+                            {%endfor%}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Reservations Table</h4>
+
+                    </p>
+                    <div class="table-responsive">
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th> user </th>
+                            <th> Email </th>
+                            <th> members out of 10 </th>
+                            <th> table number </th>
+                            <th> Reservation time </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {%for res in reservations%}
+                          <tr>
+                            <td class="py-1">
+                              <img src="{{ res.user.pic.url }}" alt="image" />
+                            </td>
+                            <td> {{res.user}}</td>
+                            <td>
+                              <div class="progress">
+                                <div class="progress-bar bg-success"  role="progressbar" style="width: {{res.prograss}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                              </div>
+                            </td>
+                            <td> {{res.table_number}} </td>
+                            <td>{{ res.created | timesince }} ago</td>
+                          </tr>
+                          <tr>
+                          {%endfor%}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <!-- partial:../../partials/_footer.html -->
+
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+{%include 'Res/AdminScript.html'%}
+  </body>
+</html>

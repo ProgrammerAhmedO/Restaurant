@@ -462,11 +462,11 @@
               <div class="col-md-6 col-xl-4 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">Menu items</h4>
+                    <h4 class="card-title">Best Item</h4>
                     <div class="owl-carousel owl-theme full-width owl-carousel-dash portfolio-carousel" id="owl-carousel-basic">
 
                       <div class="item">
-                        <img src="{{ListOfItems.0.image.url}}" alt="">
+                        <img src="{{BestItem.image.url}}" alt="">
                       </div>
                     </div>
                     <!-- Add Swap text area-->
@@ -476,18 +476,18 @@
                           <div class="preview-item-content d-flex flex-grow">
                             <div class="flex-grow">
                               <div class="d-flex d-md-block d-xl-flex justify-content-between">
-                                <h6 class="preview-subject">{{ListOfItems.0.type}}</h6>
-                                <p class="text-muted text-small">{{ListOfItems.0.description}}</p>
+                                <h6 class="preview-subject">{{BestItem.type}}</h6>
+                                <p class="text-muted text-small">{{BestItem.description}}</p>
                               </div>
-                              <p class="text-muted">{{ListOfItems.0.price}}</p>
+                              <p class="text-muted">{{BestItem.price}}</p>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <p class="text-muted">the stock is {{ListOfItems.0.quantity}} out of 100</p>
+                    <p class="text-muted">the stock is {{BestItem.quantity}} out of 100</p>
                     <div class="progress progress-md portfolio-progress">
-                      <div class="progress-bar bg-success" role="progressbar" style="width: {{item.quantity}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                      <div class="progress-bar bg-success" role="progressbar" style="width: {{BestItem.quantity}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                   </div>
                 </div>

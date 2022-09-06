@@ -1,99 +1,163 @@
-{%extends 'main.html'%}
+{%include 'Res/AdminHead.html'%}
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li>
+            <h3 class="mb-4 text-center">{{ message }}</h3> 
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{%load static %}
 {%block content%}
 {%if page == 'login'%}
 
-<br><br><br><br>
-<div class="row" >
-    <div class="col-lg-12 col-sm-12 col-xs-12"  >
-        <div class="contact-block" >
-            <form  method="post" action="">
-                {% csrf_token %}
-                <div class="row"  style="text-align:Center;">
-                    <div style="text-align:Center;" class="col-md-12" >
-                        <h3>write your personal info</h3>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <input style="text-align:Center;" type="text" class="form-control"  name="email" placeholder="Your Email" required data-error="Please enter your name">
-                                <div class="help-block with-errors"></div>
-                            </div>                                 
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <input style="text-align:Center;" type="password" placeholder="Your password" name="password" class="form-control"  required data-error="Please enter your password">
-                                <div class="help-block with-errors"></div>
-                            </div> 
-                        </div>
+<!doctype html>
+<html lang="en">
+  <head>
+  	<title>Login 10</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-                    </div>
-                    <div class="col-md-12">
-                        <div class="submit-button text-center">
-                            <input type="submit" class="btn btn-common" id="submit"  value="sign in">
-                            <div id="msgSubmit" class="h3 text-center hidden"></div> 
-                            <div class="clearfix"></div> 
-                        </div>
-                    </div>
-                </div>            
-            </form>
-        </div>
-    </div>
-</div>
-<a href= "{%url 'Registeration'%}" >didn't have an account ? </a>
-<br><br>
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<link rel="stylesheet" href="{% static 'css/style3.css' %}">
+
+	</head>
+	<body class="img js-fullheight" style="background-image: url({%static 'images/Res4.jpeg'%});">
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-6 text-center mb-5">
+					<h2 class="heading-section">Login </h2>
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-md-6 col-lg-4">
+					<div class="login-wrap p-0">
+		      	<h3 class="mb-4 text-center">Have an account?</h3>
+		      	<form method="post" action="#" class="signin-form">
+                    {%csrf_token%}
+		      		<div class="form-group">
+		      			<input type="text" class="form-control" placeholder="Email" name ="Email"  required>
+		      		</div>
+	            <div class="form-group">
+	              <input id="password-field" type="password" name ="password" class="form-control" placeholder="Password" required>
+	              <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+	            </div>
+	            <div class="form-group">
+	            	<button type="submit" class="form-control btn btn-primary submit px-3">Sign In</button>
+	            </div>
+	            <div class="form-group d-md-flex">
+	            	<div class="w-50">
+		            <a href = "{%url 'index'%}">Back Home</a>
+								</div>
+								<div class="w-50 text-md-right">
+									<a href="{%url 'Registeration'%}" style="color: #fff">Didn't have account ?</a>
+								</div>
+	            </div>
+	          </form>
+	          {% comment %} <p class="w-100 text-center">&mdash; Or Sign In With &mdash;</p>
+	          <div class="social d-flex text-center">
+	          	<a href="#" class="px-2 py-2 mr-md-1 rounded"><span class="ion-logo-facebook mr-2"></span> Facebook</a>
+	          	<a href="#" class="px-2 py-2 ml-md-1 rounded"><span class="ion-logo-twitter mr-2"></span> Twitter</a>
+	          </div> {% endcomment %}
+		      </div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script src="{% static 'js/jquery.min.js'%}"></script>
+  <script src="{% static 'js/popper.js'%}"></script>
+  <script src="{% static 'js/bootstrap.min.js'%}"></script>
+  <script src="{% static 'js/main.js'%}"></script>
+
+	</body>
+</html>
+
+
+
 {%else%}
-<br><br><br><br>
-<div class="row" >
-    <div class="col-lg-12 col-sm-12 col-xs-12"  >
-        <div class="contact-block" >
-            <form  method="post" action="">
-                {% csrf_token %}
-                <div class="row"  style="text-align:Center;">
-                    <div style="text-align:Center;" class="col-md-12" >
-                        <h3>Registertation</h3>
-                      <br><br>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>username</label>
-{{Form.username}}
-                                <div class="help-block with-errors"></div>
-                            </div>                                 
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>Email</label>
-{{Form.email}}
-                                <div class="help-block with-errors"></div>
-                            </div>                                 
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>pass1</label>
-{{Form.password1}}
-                                <div class="help-block with-errors"></div>
-                            </div>                                 
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>pass2</label>
-{{Form.password2}}
-                                <div class="help-block with-errors"></div>
-                            </div>                                 
-                        </div>
 
-                    </div>
-                    <div class="col-md-12">
-                        <div class="submit-button text-center">
-                            <input type="submit" class="btn btn-common" id="submit"  value="Sign Up">
-                            
-                            <div id="msgSubmit" class="h3 text-center hidden"></div> 
-                            <div class="clearfix"></div> 
-                        </div>
-                    </div>
-                </div>            
-            </form>
-        </div>
-    </div>
-</div>
-<br>
+<!doctype html>
+<html lang="en">
+  <head>
+  	<title>Registeration</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<link rel="stylesheet" href="{% static 'css/style3.css' %}">
+
+	</head>
+	<body class="img js-fullheight" style="background-image: url({%static 'images/Res4.jpeg'%});">
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-6 text-center mb-5">
+					<h2 class="heading-section">Registeration </h2>
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-md-6 col-lg-4">
+					<div class="login-wrap p-0">
+		      	<h3 class="mb-4 text-center">Fill your info</h3>
+		      	<form method="post" action="" class="signin-form">
+                    {%csrf_token%}
+                    <div class="form-group">
+                        {{Form.username}}
+		      		</div>
+		      		<div class="form-group">
+                        {{Form.email}}
+		      		</div>
+	            <div class="form-group">
+                    {{Form.password1}}
+
+	            </div>
+                <div class="form-group">
+                    {{Form.password2}}
+
+	            </div>
+	            <div class="form-group">
+	            	<button type="submit" class="form-control btn btn-primary submit px-3">Sign Up</button>
+	            </div>
+	            <div class="form-group d-md-flex">
+	            	<div class="w-50">
+		            <a href = "{%url 'index'%}">Back Home</a>
+								</div>
+								<div class="w-50 text-md-right">
+									<a href="{%url 'login'%}" style="color: #fff">Already have account ?</a>
+								</div>
+	            </div>
+	          </form>
+	          {% comment %} <p class="w-100 text-center">&mdash; Or Sign In With &mdash;</p>
+	          <div class="social d-flex text-center">
+	          	<a href="#" class="px-2 py-2 mr-md-1 rounded"><span class="ion-logo-facebook mr-2"></span> Facebook</a>
+	          	<a href="#" class="px-2 py-2 ml-md-1 rounded"><span class="ion-logo-twitter mr-2"></span> Twitter</a>
+	          </div> {% endcomment %}
+		      </div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script src="{% static 'js/jquery.min.js'%}"></script>
+  <script src="{% static 'js/popper.js'%}"></script>
+  <script src="{% static 'js/bootstrap.min.js'%}"></script>
+  <script src="{% static 'js/main.js'%}"></script>
+
+	</body>
+</html>
+
+
+
+
 
 {%endif%}
 

@@ -21,6 +21,27 @@ class User(AbstractUser):
     
     def role(self):
         return str(self.groups.all()[0])
+    def NumberOfOrders(self):
+        orders = Orders.objects.filter(user__Email = self.Email).count()
+        return orders
+    def NumberOfReservations(self):
+        reservations = Reservation.objects.filter(user__Email = self.Email).count()
+        return reservations
+    def FavoriteFood(self):
+        FoodList = []
+        orders = Orders.objects.filter(user__id=self.id)
+        if len(orders) != 0:
+            for order in orders:
+                FoodList.append(order.items.name)
+            return max(((item, FoodList.count(item)) for item in set(FoodList)), key=lambda a: a[1])[0]
+        else:
+            return "Didn't Order yet."
+    def UserTotalOrdersPrice(self):
+        TotalPrice = 0
+        userorders = Orders.objects.filter(user=self)  
+        for price in userorders:
+            TotalPrice = TotalPrice + price.total_price()
+        return TotalPrice
 
 
 class Items(models.Model):
@@ -52,6 +73,13 @@ class Orders(models.Model):
         return int(self.quantity * self.items.price)
     def prograss(self):
         return int(self.quantity * self.items.price) * 10
+    def UserTotalOrdersPrice(self):
+        TotalPrice = 0
+        userorders = Orders.objects.filter(user=self.user)  
+        for price in userorders:
+            TotalPrice = TotalPrice + price.total_price()
+        return TotalPrice
+
 
 
 class Reservation(models.Model):

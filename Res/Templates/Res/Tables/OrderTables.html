@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  {%load static%}
+{%include 'Res/AdminHead.html'%}
+  <body>
+    <div class="container-scroller">
+      <!-- partial:../../partials/_sidebar.html -->
+      {%include 'Res/DashBoardNav.html'%}
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_navbar.html -->
+        {%include 'DashBoardNavBar.html'%}
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">Order Tables</h3>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="#">Tables</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Basic tables</li>
+                </ol>
+              </nav>
+            </div>
+            <div class="row">
+              <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Order Creation Table</h4>
+
+                    </p>
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>User</th>
+                            <th>OrderItem</th>
+                            <th>Created</th>
+                            <th>Order Price</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {%for order in orders%}
+                          <tr>
+                            <td>{{order.user.username}}</td>
+                            <td>{{order.items}}</td>
+                            <td>{{order.created|timesince}}</td>
+                            {%if order.total_price < 50 %}
+                            <td><label class="badge badge-danger">{{order.total_price}}$</label></td>
+                            {%elif order.total_price >= 50  and  order.total_price < 100%}
+                            <td><label class="badge badge-warning">{{order.total_price}}$</label></td>
+                            {%elif order.total_price >= 100  and  order.total_price < 200%}
+                            <td><label class="badge badge-success">{{order.total_price}}$</label></td>
+                            {%elif order.total_price > 200 %}
+                            <td><label class="badge badge-info">{{order.total_price}}$</label></td>
+                            {%endif%}
+                          </tr>
+                          {%endfor%}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Order Details Table</h4>
+
+                    </p>
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>User</th>
+                            <th>Quantity</th>
+                            <th>Total Orders</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {%for order in orders%}
+
+                          <tr>
+                            <td>{{order.user.username}}</td>
+                            <td>{{order.quantity}}</td>
+                            
+                            
+                            {%if order.UserTotalOrdersPrice < 50 %}
+                            <td class="text-danger"> {{order.UserTotalOrdersPrice}}$</td>
+                            <td><label class="badge badge-danger">Low</label></td>
+                            {%elif order.UserTotalOrdersPrice >= 50 and order.UserTotalOrdersPrice < 100 %}
+                            <td class="text-warning"> {{order.UserTotalOrdersPrice}}$</td>
+                            <td><label class="badge badge-warning">Medium</label></td>
+                            {%elif order.UserTotalOrdersPrice >= 100 and order.UserTotalOrdersPrice < 200 %}
+                            <td class="text-success"> {{order.UserTotalOrdersPrice}}$</td>
+                            <td><label class="badge badge-success">High</label></td>
+                            {%elif order.UserTotalOrdersPrice > 200  %}
+                            <td class="text-info"> {{order.UserTotalOrdersPrice}}$</td>
+                            <td><label class="badge badge-info">VIP</label></td>
+                            {%endif%}
+                          </tr>
+
+                          {%endfor%}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Reservations Table</h4>
+
+                    </p>
+                    <div class="table-responsive">
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th> user </th>
+                            <th> Email </th>
+                            <th> quantity out of 10 </th>
+                            <th> Order Quantity </th>
+                            <th> Creation time </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {%for order in orders%}
+                          <tr>
+                            <td class="py-1">
+                              <img src="{{ order.user.pic.url }}" alt="image" />
+                            </td>
+                            <td> {{order.user}}</td>
+                            <td>
+                              <div class="progress">
+                                <div class="progress-bar bg-success"  role="progressbar" style="width: {{order.prograss}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                              </div>
+                            </td>
+                            <td> {{order.quantity}} </td>
+                            <td>{{ order.created | timesince }} ago</td>
+                          </tr>
+                          <tr>
+                          {%endfor%}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <!-- partial:../../partials/_footer.html -->
+
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+{%include 'Res/AdminScript.html'%}
+  </body>
+</html>

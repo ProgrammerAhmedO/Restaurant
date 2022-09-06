@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  {%load static%}
+{%include 'Res/AdminHead.html'%}
+  <body>
+    <div class="container-scroller">
+      <!-- partial:../../partials/_sidebar.html -->
+      {%include 'Res/DashBoardNav.html'%}
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_navbar.html -->
+        {%include 'DashBoardNavBar.html'%}
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title"> User Tables </h3>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="#">Tables</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Basic tables</li>
+                </ol>
+              </nav>
+            </div>
+            <div class="row">
+              <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">User Information</h4>
+
+                    </p>
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Username</th>
+                            <th>Favorite Food</th>
+                            <th>joined date</th>
+                            <th>Reservations</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+
+                          {%for user in users%}
+                          <tr>
+                            <td>{{user.username}}</td>
+                            <td>{{user.FavoriteFood}}</td>
+                            <td>{{user.date_joined|timesince}} ago</td>
+                            {%if user.NumberOfReservations < 5%}
+                            <td><label class="badge badge-danger">{{user.NumberOfReservations}}</label></td>
+                            {%elif  user.NumberOfReservations <= 10 and  user.NumberOfReservations > 5 %}
+                            <td><label class="badge badge-warning">{{user.NumberOfReservations }}</label></td>
+                            {%elif  user.NumberOfReservations <= 20 and  user.NumberOfReservations > 10 %}
+                            <td><label class="badge badge-success">{{user.NumberOfReservations }}</label></td>
+                            {%elif  user.NumberOfReservations > 20  %}
+                            <td><label class="badge badge-info">{{user.NumberOfReservations }}</label></td>
+                            {%endif%}
+                          </tr>
+                            {%endfor%}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">User Detail Table</h4>
+
+                    </p>
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>PhoneNo.</th>
+                            <th>OrdersNo.</th>
+                            <th>Total Cost </th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for user in users%}
+                          <tr>
+                            <td>{{user.phone_number}}</td>
+                            <td>{{user.NumberOfOrders}}</td>
+                            {%if user.UserTotalOrdersPrice < 50 %}
+                            <td class="text-danger"> {{user.UserTotalOrdersPrice}}$</td>
+                            <td><label class="badge badge-danger">Regular </label></td>
+                            
+                            {%elif user.UserTotalOrdersPrice >= 50  and  user.UserTotalOrdersPrice < 100 %}
+                            <td class="text-warning"> {{user.UserTotalOrdersPrice}} </td>
+                            <td><label class="badge badge-warning">Nice Customer</label></td>
+                            {%elif user.UserTotalOrdersPrice >= 100  and  user.UserTotalOrdersPrice < 200 %}
+                            <td class="text-success">{{user.UserTotalOrdersPrice}}</td>
+                            <td><label class="badge badge-success"> Great Customer</label></td>
+                            {%elif user.UserTotalOrdersPrice >= 200  %}
+                            <td class="text-info"> {{user.UserTotalOrdersPrice}}$</td>
+                            <td><label class="badge badge-info">VIP</label></td>
+                              {%endif%}
+                          </tr>
+
+                            {%endfor%}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Reservations Table</h4>
+
+                    </p>
+                    <div class="table-responsive">
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th> user </th>
+                            <th> name </th>
+                            <th> Orders out of 10 </th>
+                            <th> Email </th>
+                            <th> SignUp Date </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {%for user in users%}
+                          <tr>
+                            <td class="py-1">
+                              <img src="{{ user.pic.url }}" alt="image" />
+                            </td>
+                            <td> {{user.name}}</td>
+                            <td>
+                              <div class="progress">
+                                <div class="progress-bar bg-success"  role="progressbar" style="width: {{user.NumberOfOrders}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                              </div>
+                            </td>
+                            <td> {{user.email}} </td>
+                            <td>{{user.date_joined|timesince}} ago</td>
+                          </tr>
+                          <tr>
+                          {%endfor%}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <!-- partial:../../partials/_footer.html -->
+
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+{%include 'Res/AdminScript.html'%}
+  </body>
+</html>
