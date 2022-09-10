@@ -12,8 +12,9 @@ from django.contrib.auth.models import Group
 import speech_recognition as sr #ML
 from django.db.models import Q
 from geopy.geocoders import Nominatim
+import operator
 
-
+#Registeration/Login and Logout_______________________________________________
 def Registeration(request):
     page = 'Registeration'
     Form = MyUserCreationForm()
@@ -30,8 +31,6 @@ def Registeration(request):
             return redirect("login")
     context = {"page":page,"Form":Form}
     return render(request, "Res/login_register.html", context)
-
-
 
 def loginPage(request):
     page = 'login'
@@ -65,6 +64,8 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
+
+#Customer View _________________________________________
 def index(request):
     role = None
     if request.user.is_authenticated:
@@ -200,7 +201,6 @@ def edit_profile(request):
        
     context = {'Page':Page, 'Form':Form}
     return render(request, 'Res/profile.html' ,context)
-
 
 
 def DeleteItem(request,pk):
@@ -361,7 +361,12 @@ def OrderDetails(request,pk):
     context = {"order":order,"role":role}
     return render(request, 'Res/OrderDetails.html',context)
 
+
+
+# Admin Part ________________________________________________________________________
+# Chart Pages 
 def OrderCharts(request):
+    ListItems = ToDoList.objects.filter(user=request.user)
     ordersCounter = Orders.objects.all().count()
     items = Items.objects.all()
     orderItems = []
@@ -388,9 +393,14 @@ def OrderCharts(request):
                 return redirect("DashBoard")
     #_____________________________________________________
 
-    context = {"orderItems":orderItems,"orderData":orderData , "ordersCounter":ordersCounter}
+    context = {
+    "orderItems":orderItems,
+    "orderData":orderData , 
+    "ordersCounter":ordersCounter,
+    "ListItems":ListItems}
     return render(request,"Res/Charts/OrderCharts.html",context)
 def CustomerCharts(request):
+    ListItems = ToDoList.objects.filter(user=request.user)
     AllUsers = User.objects.all().count()
     currentmonth = datetime.now().month
     monthes = []
@@ -416,9 +426,11 @@ def CustomerCharts(request):
             else:
                 return redirect("DashBoard")
     #_____________________________________________________
-    context = {"monthes":monthes,"monthlyUsers":monthlyUsers , "AllUsers":AllUsers}
+    context = {"monthes":monthes,"monthlyUsers":monthlyUsers
+    ,"ListItems":ListItems , "AllUsers":AllUsers}
     return render(request,"Res/Charts/CustomerCharts.html",context)
 def ReservationCharts(request):
+    ListItems = ToDoList.objects.filter(user=request.user)
     AllReservations = Reservation.objects.all().count()
     currentmonth = datetime.now().month
     monthes = []
@@ -445,11 +457,12 @@ def ReservationCharts(request):
                 return redirect("DashBoard")
     #_____________________________________________________
 
-    context = {"monthes":monthes,"monthlyUsers":monthlyReservations , "AllReservations":AllReservations}
+    context = {"monthes":monthes,"monthlyUsers":monthlyReservations 
+    ,"ListItems":ListItems, "AllReservations":AllReservations}
     return render(request,"Res/Charts/CustomerCharts.html",context)
 
 
-
+#DashBoard
 @login_required(login_url='login')
 def DashBoard(request):
     user = request.user
@@ -480,10 +493,19 @@ def DashBoard(request):
         usersFavoritItmeList = []
         for user in users :
             usersFavoritItmeList.append(user.FavoriteFood())
-        print("users best item list is :",usersFavoritItmeList)
+
         mostorder =  max(((item, usersFavoritItmeList.count(item)) for item in set(usersFavoritItmeList)), key=lambda a: a[1])[0]
-        print(mostorder)
+
         BestItem = Items.objects.get(name=mostorder)
+    #_____________________________________________________
+    #Messages From Post
+        posts = Posts.objects.filter(user = request.user)
+        message = []
+        msgCounter = -1
+        for post in posts:
+            message = (post.AllMessages())
+            msgCounter = msgCounter + post.AllMessages().count()
+
     #_____________________________________________________
 
         thisMonth = datetime.now().month
@@ -650,44 +672,54 @@ def DashBoard(request):
         #     except:
         #         pass
         #__________________________________________________________ 
-        #location Part
-        # geolocator = Nominatim(user_agent="geoapiExercises")
-        # location = geolocator.reverse(request.user.location)
-        # print(location)
-        # print(request.user.location)
+        # location Part
 
-        # address = location.raw['address']
-        # city = address.get('city', '')
-        # state = address.get('state', '')
-        # country = address.get('country', '')
-        # code = address.get('country_code')
-        # zipcode = address.get('postcode')
-        # print('City : ',city)
-        # print('State : ',state)
-        # print('Country : ',country)
-        # print('Zip Code : ', zipcode)
+        countriesList = []
+        users = User.objects.all()
+        for user in users:
+            country = user.UserCounty()
+            if country != None:
+                countriesList.append(country)
+        countriesSet = set(countriesList)
+        uniqueCountryList = list(countriesSet)
+        
+        UsersInCountry = []
+        for i in range(len(uniqueCountryList)):
+            UsersInCountry.append(operator.countOf(countriesList,uniqueCountryList[i]))
+        #uniqueCountryList the country 
+        #UsersInCountry the number of users in each country
+        #UsersInCountryPercintage the percintage of each country 
+        UsersInCountryPercintage = []
+        for i in UsersInCountry:
+            UsersInCountryPercintage.append(i/sum(UsersInCountry)*100)
+        print(uniqueCountryList)
+        print(UsersInCountry)
+        print(UsersInCountryPercintage)
+
+
         #__________________________________________________________ 
         context = {
         "dailyPrice":dailyPrice,"percentage":percentage,
-        "todayorders":todayorders,
-        "todayuserjoined":todayuserjoined,
+        "todayorders":todayorders,"uniqueCountryList":uniqueCountryList,
+        "todayuserjoined":todayuserjoined,"UsersInCountry":UsersInCountry,
         "todayuserspercentage":todayuserspercentage,
         "orderspercentage":orderspercentage,
         "monthlypercentage":monthlypercentage,
         "monthlyPrice":monthlyPrice,"BestItem":BestItem,
-        "customerpircentage":customerpircentage,
+        "customerpircentage":customerpircentage,"msgCounter":msgCounter,
         "thismonthcustomers":thismonthcustomers,
         "thismonthReservations":thismonthReservations,
         "monthlyReservationPercentage":monthlyReservationPercentage,
         "Reservationpircentage":Reservationpircentage,
         "todayReservations":todayReservations,"user":request.user,
-        "reservations":reservations,"ListItems":ListItems,
-        "contacts":contacts,"items":items,
+        "reservations":reservations,"ListItems":ListItems,"index":index,
+        "contacts":contacts,"items":items,"message":message,
         "ListOfItems":ListOfItems,"bestuser":bestuser,"BestOrdersPrice":BestOrdersPrice,
         "bestuserslist":bestuserslist,"BestOrdersPriceList":BestOrdersPriceList,
         }
         return render(request,'Res/DashBoard.html',context)
 
+# Table Pages
 def ReservationTables(request):
     reservations = Reservation.objects.all()
     if request.method == "POST":
@@ -696,7 +728,6 @@ def ReservationTables(request):
             reservations = Reservation.objects.filter(Q(user__name__icontains=search) | Q(user__Email__icontains=search) |Q(members__icontains=search)|Q(Reservation_time__icontains=search))
     context = {"reservations":reservations}
     return render(request,'Res/Tables/ReservationTables.html',context)
-
 def OrderTables(request):
     orders = Orders.objects.all()
     # users = User.objects.all()

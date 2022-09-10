@@ -208,13 +208,11 @@
                 </div>
               </div>
 
-
-              
               <div class="col-md-8 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
                     <div class="d-flex flex-row justify-content-between">
-                      <h4 class="card-title mb-1">Top Customers</h4>
+                      <h4 class="card-title mb-1">Top 5 Customers</h4>
                       {% comment %} <p class="text-muted mb-1">Price payed</p> {% endcomment %}
                     </div>
 
@@ -565,49 +563,49 @@
                                 <td>
                                   <i class="flag-icon flag-icon-us"></i>
                                 </td>
-                                <td>USA</td>
-                                <td class="text-right"> 1500 </td>
-                                <td class="text-right font-weight-medium"> 56.35% </td>
+                                <td>{{uniqueCountryList.0}}</td>
+                                <td class="text-right"> {{UsersInCountry.0}} </td>
+                                <td class="text-right font-weight-medium"> {{UsersInCountryPercintage.0}}% </td>
                               </tr>
                               <tr>
                                 <td>
                                   <i class="flag-icon flag-icon-de"></i>
                                 </td>
-                                <td>Germany</td>
-                                <td class="text-right"> 800 </td>
-                                <td class="text-right font-weight-medium"> 33.25% </td>
+                                <td>{{uniqueCountryList.1}}</td>
+                                <td class="text-right"> {{UsersInCountry.1}} </td>
+                                <td class="text-right font-weight-medium"> {{UsersInCountryPercintage.1}}% </td>
                               </tr>
                               <tr>
                                 <td>
                                   <i class="flag-icon flag-icon-au"></i>
                                 </td>
-                                <td>Australia</td>
-                                <td class="text-right"> 760 </td>
-                                <td class="text-right font-weight-medium"> 15.45% </td>
+                                <td>{{uniqueCountryList.2}}</td>
+                                <td class="text-right"> {{UsersInCountry.2}} </td>
+                                <td class="text-right font-weight-medium"> {{UsersInCountryPercintage.2}}% </td>
                               </tr>
                               <tr>
                                 <td>
                                   <i class="flag-icon flag-icon-gb"></i>
                                 </td>
-                                <td>United Kingdom</td>
-                                <td class="text-right"> 450 </td>
-                                <td class="text-right font-weight-medium"> 25.00% </td>
+                                <td>{{uniqueCountryList.3}}</td>
+                                <td class="text-right"> {{UsersInCountry.3}} </td>
+                                <td class="text-right font-weight-medium"> {{UsersInCountryPercintage.3}}% </td>
                               </tr>
                               <tr>
                                 <td>
                                   <i class="flag-icon flag-icon-ro"></i>
                                 </td>
-                                <td>Romania</td>
-                                <td class="text-right"> 620 </td>
-                                <td class="text-right font-weight-medium"> 10.25% </td>
+                                <td>{{uniqueCountryList.4}}</td>
+                                <td class="text-right"> {{UsersInCountry.4}} </td>
+                                <td class="text-right font-weight-medium"> {{UsersInCountryPercintage.4}}% </td>
                               </tr>
                               <tr>
                                 <td>
                                   <i class="flag-icon flag-icon-br"></i>
                                 </td>
-                                <td>Brasil</td>
-                                <td class="text-right"> 230 </td>
-                                <td class="text-right font-weight-medium"> 75.00% </td>
+                                <td>{{uniqueCountryList.5}}</td>
+                                <td class="text-right"> {{UsersInCountry.5}} </td>
+                                <td class="text-right font-weight-medium"> {{UsersInCountryPercintage.5}}% </td>
                               </tr>
                             </tbody>
                           </table>

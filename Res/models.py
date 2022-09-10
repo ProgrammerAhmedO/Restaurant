@@ -6,7 +6,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from location_field.models.plain import PlainLocationField
 from phonenumber_field.modelfields import PhoneNumberField
-
+from geopy.geocoders import Nominatim
 
 class User(AbstractUser):
 
@@ -42,7 +42,17 @@ class User(AbstractUser):
         for price in userorders:
             TotalPrice = TotalPrice + price.total_price()
         return TotalPrice
-
+    def UserCounty(self):
+        geolocator = Nominatim(user_agent="geoapiExercises")
+        try:
+            location = geolocator.reverse(self.location)
+            print(location)
+            if location != None:
+                address = location.raw['address']
+                country = address.get('country', '')
+                return country
+        except:
+            return None
 
 class Items(models.Model):
     FOOD_CHOICES = (
@@ -103,6 +113,9 @@ class Posts(models.Model):
     pic = models.ImageField(null = True , default="img-07.jpg")
     def __str__(self):
         return self.title
+    def AllMessages(self):
+        msgs = Messages.objects.filter(post__id = self.id )
+        return msgs
 
 class Messages(models.Model):
     post = models.ForeignKey(Posts, on_delete= models.CASCADE)
