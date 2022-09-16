@@ -41,7 +41,7 @@ class User(AbstractUser):
         userorders = Orders.objects.filter(user=self)  
         for price in userorders:
             TotalPrice = TotalPrice + price.total_price()
-        return TotalPrice
+        return int(TotalPrice)
     def UserCounty(self):
         geolocator = Nominatim(user_agent="geoapiExercises")
         try:

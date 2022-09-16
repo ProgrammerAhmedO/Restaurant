@@ -36,6 +36,9 @@ urlpatterns = [
     path('ReservationTables/', views.ReservationTables , name ='ReservationTables'),
     path('OrderTables/', views.OrderTables , name ='OrderTables'),
     path('CustomerTables/', views.CustomerTables , name ='CustomerTables'),
+    path('create-checkout-session/',views.create_checkout_session , name="create-checkout-session"),
+    path('success/',views.success , name="success"),
+
 
 
     

@@ -1,7 +1,4 @@
 from datetime import datetime
-from multiprocessing import context
-from os import remove
-from urllib import request
 from django.shortcuts import render, redirect
 from .models import *
 from django.contrib import messages
@@ -13,6 +10,12 @@ import speech_recognition as sr #ML
 from django.db.models import Q
 from geopy.geocoders import Nominatim
 import operator
+import stripe
+from django.conf import settings
+from django.http import JsonResponse
+from flask import Flask
+
+
 
 #Registeration/Login and Logout_______________________________________________
 def Registeration(request):
@@ -760,3 +763,62 @@ def CustomerTables(request):
     context = {"users":users}
     return render(request,'Res/Tables/CustomerTables.html',context)
 
+
+
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+app = Flask(__name__,
+            static_url_path='',
+            static_folder='public')
+
+YOUR_DOMAIN = 'http://localhost:8000'
+
+@app.route('/create-checkout-session', methods=['POST'])
+def create_checkout_session(request):
+
+    user = request.user
+    Total_Orders = orders = Orders.objects.filter(user__id = user.id).count()
+    orders = Orders.objects.filter(user__id = user.id)
+    total = 0
+    for order in orders:
+        total = total + (order.items.price * order.quantity)
+    total_to_pay = int(total *100)
+
+
+    product = stripe.Product.create(
+    name=f'Total of {Total_Orders} Order/s with amount of :',
+    description='thx for using our service ',
+    images=['https://img.freepik.com/premium-vector/vector-shopping-cart-icon-paper-sticker-with-shadow-colored-shopping-symbol-isolated_118339-1774.jpg?w=2000'],
+    )
+
+    price = stripe.Price.create(
+    product=product.id,
+    unit_amount=total_to_pay,
+    currency='usd',
+    )
+    try:
+        checkout_session = stripe.checkout.Session.create(
+
+            line_items=[
+                {
+                    # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+                    'price': price.id,
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url=YOUR_DOMAIN + '/success/',
+            cancel_url=YOUR_DOMAIN + '/cart/',
+         
+        )
+        return redirect(checkout_session.url)
+    except Exception as e:
+            return JsonResponse({'error': str(e)})
+    
+if __name__ == '__main__':
+    app.run(port=8000)
+
+
+def success(request):
+    return render (request, 'Res/Payment/success.html')
