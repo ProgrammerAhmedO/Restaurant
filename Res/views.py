@@ -95,12 +95,10 @@ def menu(request):
     items = Items.objects.all()
     context = {'items':items}
     return render(request, 'Res/menu.html' ,context)
-
 def about(request):
     items = Items.objects.all()
     context = {'items':items}
     return render(request, 'Res/about.html' ,context)
-
 def contact(request):
     if request.method == "POST":
         Contact.objects.create(
@@ -110,7 +108,6 @@ def contact(request):
         )
     context = {}
     return render(request, 'Res/contact.html' ,context)
-
 def reservation(request):
     if request.method == 'POST':
         reservation = Reservation.objects.create(
@@ -124,15 +121,28 @@ def reservation(request):
 
     context = {}
     return render(request, 'Res/reservation.html' ,context)
-
-
 def stuff(request):
     context = {}
     return render(request, 'Res/stuff.html' ,context)
-    
 def gallery(request):
     context = {}
     return render(request, 'Res/gallery.html' ,context)
+def blog(request):
+    posts = Posts.objects.all()
+    context = {'posts':posts}
+    return render(request, 'Res/blog.html' ,context)
+def blogDetails(request,pk):
+    post = Posts.objects.get(id = pk)
+    msg = Messages.objects.filter(post = post)
+    if request.method=='POST':
+        Messages.objects.create(
+            body = request.POST.get('message'),
+            user = request.user,
+            post = post
+        )
+    context = {'post':post, 'msg':msg}
+    return render(request, 'Res/blog-details.html' ,context)
+
 
 @login_required(login_url='login')
 def cart(request):
@@ -154,42 +164,32 @@ def cart(request):
         
     context = {'orders':orders,'total':int(total)}
     return render(request, 'Res/cart.html' ,context)
+def DeleteItem(request,pk):
+    order = Orders.objects.get(id=pk)
+    role = None
+    if request.user.is_authenticated:
+        role = str(request.user.groups.all()[0])
+    if request.method == "POST":
+        order.delete()
+        return redirect("cart")
+        # quantity = 
+    context = {'obj':order.items, "role":role}
+    return render(request, 'Res/sure.html' ,context)
 
 
-def blog(request):
-    posts = Posts.objects.all()
-    context = {'posts':posts}
-    return render(request, 'Res/blog.html' ,context)
-
-
-def blogDetails(request,pk):
-    post = Posts.objects.get(id = pk)
-    msg = Messages.objects.filter(post = post)
-    if request.method=='POST':
-        Messages.objects.create(
-            body = request.POST.get('message'),
-            user = request.user,
-            post = post
-        )
-    context = {'post':post, 'msg':msg}
-    return render(request, 'Res/blog-details.html' ,context)
-
-
+# Profile View 
 def profile_reservation(request):
     user = request.user 
     Page = 'reservation'
     reservation = Reservation.objects.filter(user__id = user.id)
     context = {'reservation':reservation, 'Page':Page}
     return render(request, 'Res/profile.html' ,context)
-
 def profile_orders(request):
     user = request.user
     Page = 'orders'
     orders = Orders.objects.filter(user__id = user.id)
     context = {'orders':orders,'Page':Page}
     return render(request, 'Res/profile.html' ,context)
-
-
 def edit_profile(request):
     user = request.user
     Page = 'edit'
@@ -204,166 +204,6 @@ def edit_profile(request):
        
     context = {'Page':Page, 'Form':Form}
     return render(request, 'Res/profile.html' ,context)
-
-
-def DeleteItem(request,pk):
-    order = Orders.objects.get(id=pk)
-    role = None
-    if request.user.is_authenticated:
-        role = str(request.user.groups.all()[0])
-    if request.method == "POST":
-        order.delete()
-        return redirect("cart")
-        # quantity = 
-    context = {'obj':order.items, "role":role}
-    return render(request, 'Res/sure.html' ,context)
-
-def CustomersView(request):
-    chart = '1'
-    role = None
-    if request.user.is_authenticated:
-        role = str(request.user.groups.all()[0])
-    users = User.objects.all()
-    currentmonth = datetime.now().month
-    currentyear = datetime.now().year
-    users1 = []
-    month = int(currentmonth)
-    monthlist=[]
-    for mo in range (5):
-        monthlyusers = User.objects.filter(date_joined__month=month, date_joined__year=currentyear).count()
-        users1.append(monthlyusers)
-        monthlist.append(month)
-
-        if month == 1 :
-            month = 12
-            currentyear = currentyear -1
-        else:
-            month = month - 1 
-
-        
-    context = {
-        "users":users,
-        "role":role,
-        "users1":users1,
-        "monthlist":monthlist,
-        "chart":chart
-        }
-    return render(request, 'Res/Customers.html',context)
-
-def CustomersChart2(request):
-    chart = '2'
-    role = None
-    if request.user.is_authenticated:
-        role = str(request.user.groups.all()[0])
-    users = User.objects.all()
-    currentmonth = datetime.now().month
-    currentyear = datetime.now().year
-    users1 = []
-    month = int(currentmonth)
-    monthlist=[]
-    for mo in range (5):
-        monthlyusers = User.objects.filter(date_joined__month=month, date_joined__year=currentyear).count()
-        users1.append(monthlyusers)
-        monthlist.append(month)
-
-        if month == 1 :
-            month = 12
-            currentyear = currentyear -1
-        else:
-            month = month - 1 
-
-        
-    context = {
-        "users":users,
-        "role":role,
-        "users1":users1,
-        "monthlist":monthlist,
-        "chart":chart
-        }
-    return render(request, 'Res/Customers.html',context)
-def CustomersChart3(request):
-    chart = '3'
-    role = None
-    if request.user.is_authenticated:
-        role = str(request.user.groups.all()[0])
-    users = User.objects.all()
-    currentmonth = datetime.now().month
-    currentyear = datetime.now().year
-    users1 = []
-    month = int(currentmonth)
-    monthlist=[]
-    for mo in range (5):
-        monthlyusers = User.objects.filter(date_joined__month=month, date_joined__year=currentyear).count()
-        users1.append(monthlyusers)
-        monthlist.append(month)
-
-        if month == 1 :
-            month = 12
-            currentyear = currentyear -1
-        else:
-            month = month - 1 
-
-        
-    context = {
-        "users":users,
-        "role":role,
-        "users1":users1,
-        "monthlist":monthlist,
-        "chart":chart
-        }
-    return render(request, 'Res/Customers.html',context)
-
-def CustomerDetails(request,pk):
-    role = None
-    if request.user.is_authenticated:
-        role = str(request.user.groups.all()[0])
-    user = User.objects.get(id=pk)
-    context = {"user":user,"role":role}
-    return render(request, 'Res/CustomerDetails.html',context)
-
-def Reservations(request):
-    chart = 1
-    role = None
-    if request.user.is_authenticated:
-        role = str(request.user.groups.all()[0])
-    Reservations = Reservation.objects.all()
-    context = {"Reservations":Reservations,"role":role,"chart":chart}
-    return render(request, 'Res/Reservations.html',context)
-# def ReservationsChart2(request):
-#     chart = 2
-#     role = None
-#     if request.user.is_authenticated:
-#         role = str(request.user.groups.all()[0])
-#     Reservations = Reservation.objects.all()
-#     context = {"Reservations":Reservations,"role":role,"chart":chart}
-#     return render(request, 'Res/Reservations.html',context)
-
-def ReservationDetails(request,pk):
-    reservation = Reservation.objects.get(id = pk)
-    role = None
-    if request.user.is_authenticated:
-        role = str(request.user.groups.all()[0])
-    
-    context = {"Reservation":reservation,"role":role}
-    return render(request, 'Res/ReservationDetails.html',context)
-
-def orders(request):
-    role = None
-    if request.user.is_authenticated:
-        role = str(request.user.groups.all()[0])
-    orders = Orders.objects.all()
-    context = {"orders":orders,"role":role}
-    return render(request, 'Res/Orders.html',context)
-
-def OrderDetails(request,pk):
-    order = Orders.objects.get(id = pk)
-    role = None
-    if request.user.is_authenticated:
-        role = str(request.user.groups.all()[0])
-    
-    context = {"order":order,"role":role}
-    return render(request, 'Res/OrderDetails.html',context)
-
 
 
 # Admin Part ________________________________________________________________________
@@ -715,14 +555,15 @@ def DashBoard(request):
         "monthlyReservationPercentage":monthlyReservationPercentage,
         "Reservationpircentage":Reservationpircentage,
         "todayReservations":todayReservations,"user":request.user,
-        "reservations":reservations,"ListItems":ListItems,"index":index,
-        "contacts":contacts,"items":items,"message":message,
+        "reservations":reservations,"ListItems":ListItems[0:5],"index":index,
+        "contacts":contacts[0:4],"items":items,"message":message,
         "ListOfItems":ListOfItems,"bestuser":bestuser,"BestOrdersPrice":BestOrdersPrice,
         "bestuserslist":bestuserslist,"BestOrdersPriceList":BestOrdersPriceList,
         }
         return render(request,'Res/DashBoard.html',context)
 
 # Table Pages
+@login_required(login_url='login')
 def ReservationTables(request):
     reservations = Reservation.objects.all()
     if request.method == "POST":
@@ -731,6 +572,7 @@ def ReservationTables(request):
             reservations = Reservation.objects.filter(Q(user__name__icontains=search) | Q(user__Email__icontains=search) |Q(members__icontains=search)|Q(Reservation_time__icontains=search))
     context = {"reservations":reservations}
     return render(request,'Res/Tables/ReservationTables.html',context)
+@login_required(login_url='login')
 def OrderTables(request):
     orders = Orders.objects.all()
     # users = User.objects.all()
@@ -753,6 +595,7 @@ def OrderTables(request):
 
     context = {"orders":orders,} #"UserList":UserList,"userTotalPriceList":userTotalPriceList,
     return render(request,'Res/Tables/OrderTables.html',context)
+@login_required(login_url='login')
 def CustomerTables(request):
     users = User.objects.all()
     if request.method == "POST":
@@ -765,15 +608,14 @@ def CustomerTables(request):
 
 
 
-
+# Stripe Payment Method
 stripe.api_key = settings.STRIPE_SECRET_KEY
-
 app = Flask(__name__,
             static_url_path='',
             static_folder='public')
-
 YOUR_DOMAIN = 'http://localhost:8000'
 
+@login_required(login_url='login')
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session(request):
 
@@ -819,6 +661,6 @@ def create_checkout_session(request):
 if __name__ == '__main__':
     app.run(port=8000)
 
-
+@login_required(login_url='login')
 def success(request):
     return render (request, 'Res/Payment/success.html')

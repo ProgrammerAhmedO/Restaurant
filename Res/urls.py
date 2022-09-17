@@ -20,15 +20,6 @@ urlpatterns = [
     path('Registeration/', views.Registeration , name ='Registeration'),
     path('DeleteItem/<str:pk>', views.DeleteItem , name ='DeleteItem'),
     path('DeleteItem/<str:pk>', views.DeleteItem , name ='DeleteItem'),
-    path('Customers/', views.CustomersView , name ='Customers'),
-    path('CustomersChart2/', views.CustomersChart2 , name ='CustomersChart2'),
-    path('CustomersChart3/', views.CustomersChart3 , name ='CustomersChart3'),
-    path('CustomerDetails/<str:pk>/', views.CustomerDetails , name ='CustomerDetails'),
-    path('Reservations/', views.Reservations , name ='Reservations'),
-    # path('ReservationsChart2/', views.ReservationsChart2 , name ='ReservationsChart2'),
-    path('ReservationDetails/<str:pk>/', views.ReservationDetails , name ='ReservationDetails'),
-    path('orders/', views.orders , name ='orders'),
-    path('OrderDetails/<str:pk>/', views.OrderDetails , name ='OrderDetails'),
     path('OrderCharts/', views.OrderCharts , name ='OrderCharts'),
     path('CustomerCharts/', views.CustomerCharts , name ='CustomerCharts'),
     path('ReservationCharts/', views.ReservationCharts , name ='ReservationCharts'),
@@ -38,7 +29,6 @@ urlpatterns = [
     path('CustomerTables/', views.CustomerTables , name ='CustomerTables'),
     path('create-checkout-session/',views.create_checkout_session , name="create-checkout-session"),
     path('success/',views.success , name="success"),
-
 
 
     

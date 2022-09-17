@@ -1,7 +1,10 @@
-
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm
 from .models import *
+from django import forms
+
+class DateTimePickerInput(forms.DateTimeInput):
+        input_type = 'datetime'
 
 # class ReservationForm(ModelForm):
 #     class Meta:
