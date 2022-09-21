@@ -2,21 +2,19 @@ from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm
 from .models import *
 from django import forms
+from .widget import BootstrapDateTimePickerInput
 
-class DateTimePickerInput(forms.DateTimeInput):
-        input_type = 'datetime'
-
-# class ReservationForm(ModelForm):
-#     class Meta:
-#         model = Reservation
-#         fields = '__all__'
+class DateForm(forms.Form):
+    date = forms.DateTimeField(
+        input_formats=['%Y-%m-%d %H:%M'],
+        widget=BootstrapDateTimePickerInput
+    )
 
 
-#     def __init__(self, *args, **kwargs):
-#         super(ReservationForm, self).__init__(*args, **kwargs)
-#         self.fields['members'].widget.attrs.update({'class': 'custom-select d-block form-control'})
-#         self.fields['Reservation_time'].widget.attrs.update({'class': 'custom-select d-block form-control'})
-#         self.fields['table_number'].widget.attrs.update({'class': 'custom-select d-block form-control'})
+
+# class DateTimePickerInput(forms.DateTimeInput):
+#         input_type = 'datetime'
+
 
 class UserForm(ModelForm):
     class Meta:
@@ -52,3 +50,21 @@ class MyUserCreationForm(UserCreationForm):
         self.fields['email'].widget.attrs.update({'class': 'form-control','placeholder':'Email'})
         self.fields['password1'].widget.attrs.update({'class': 'form-control','placeholder':'Password'})
         self.fields['password2'].widget.attrs.update({'class': 'form-control','placeholder':'Confirm Password'})
+
+
+
+
+# class ReservationForm(ModelForm):
+#     class Meta:
+#         model = Reservation
+#         fields = '__all__'
+
+
+#     def __init__(self, *args, **kwargs):
+#         super(ReservationForm, self).__init__(*args, **kwargs)
+#         self.fields['members'].widget.attrs.update({'class': 'custom-select d-block form-control'})
+#         self.fields['Reservation_time'].widget.attrs.update({'class': 'custom-select d-block form-control',})
+#         self.fields['table_number'].widget.attrs.update({'class': 'custom-select d-block form-control'})
+#     widgets = {
+#             'Reservation_time' : DateTimePickerInput(),
+#         }

@@ -1,4 +1,5 @@
 from datetime import datetime
+from http.client import HTTPResponse
 from django.shortcuts import render, redirect
 from .models import *
 from django.contrib import messages
@@ -14,6 +15,7 @@ import stripe
 from django.conf import settings
 from django.http import JsonResponse
 from flask import Flask
+from datetime import datetime
 
 
 
@@ -108,18 +110,30 @@ def contact(request):
         )
     context = {}
     return render(request, 'Res/contact.html' ,context)
+@login_required(login_url='login')
 def reservation(request):
+    Form = DateForm()
     if request.method == 'POST':
-        reservation = Reservation.objects.create(
-        user = request.user,
-        members = int(request.POST.get('members')),
-        table_number = request.POST.get('table_number'),
-        Reservation_time = request.POST.get('date'),
-        )
-        reservation.save()
-        
+        Members = request.POST.get('members')
+        if Members == None:
+            Members = 1
+        else:
+            Members = int(Members)
+        Reservation_date = request.POST.get('date')
+        date = datetime.strptime(Reservation_date, '%m/%d/%Y %I:%M %p')
+        try:
+            reservation = Reservation.objects.create(
+            user = request.user,
+            members = Members,
+            table_number = request.POST.get('table_number'),
+            Reservation_time = date,
+            )
+            reservation.save()
+            messages.success(request, 'the Reservation is been created successfuly ')
+        except:
+            messages.error(request, 'Error During Reservation')
 
-    context = {}
+    context = {'Form':Form}
     return render(request, 'Res/reservation.html' ,context)
 def stuff(request):
     context = {}
@@ -664,3 +678,9 @@ if __name__ == '__main__':
 @login_required(login_url='login')
 def success(request):
     return render (request, 'Res/Payment/success.html')
+
+
+def test(request):
+    Form = DateForm()
+    context ={'Form':Form}
+    return render(request, 'Res/test.html', context)

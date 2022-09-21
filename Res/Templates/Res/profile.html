@@ -1,6 +1,14 @@
 {%extends 'main.html'%}
 {%block content%}
+{%load static%}
+<head>
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  
+	<!-- Site CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css'%}">    
+    <link rel="stylesheet" href="{% static 'css/profile.css'%}">    
 
+</head>
 <br><br><br>
 {%if Page == 'reservation' %}
 <body>

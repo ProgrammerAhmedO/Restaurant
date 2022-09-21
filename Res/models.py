@@ -97,10 +97,10 @@ class Reservation(models.Model):
     user = models.ForeignKey(User, on_delete= models.CASCADE)
     members = models.IntegerField()
     table_number = models.IntegerField(null=True)
-    Reservation_time = models.CharField(max_length=200)
+    Reservation_time = models.DateTimeField(max_length=200)
     
-    def __str__(self):
-        return self.Reservation_time
+    # def __str__(self):
+    #     return self.user.name
     def prograss(self):
         return self.members * 10
 
@@ -139,10 +139,3 @@ class ToDoList(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     def __str__(self):
         return self.body[0:20]
-    # def compeletedtime(self):
-    #     if self.compeleted == True:
-    #         compeletedTime = datetime.now().minute
-    #     return compeletedTime
-    # def automaticDelete(self, *args , **kwargs):
-    #     if self.compeletedtime == datetime.now().minute + 1 :
-    #         self.delete()

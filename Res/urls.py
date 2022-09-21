@@ -29,6 +29,7 @@ urlpatterns = [
     path('CustomerTables/', views.CustomerTables , name ='CustomerTables'),
     path('create-checkout-session/',views.create_checkout_session , name="create-checkout-session"),
     path('success/',views.success , name="success"),
+    path('test/',views.test , name="test"),
 
 
     

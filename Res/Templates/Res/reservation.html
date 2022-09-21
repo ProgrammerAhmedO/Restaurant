@@ -1,6 +1,7 @@
 {%extends 'main.html'%}
 	{%block content%}
 	{%load static%}
+
 	<!-- Start All Pages -->
 	<div class="all-page-title page-breadcrumb">
 		<div class="container text-center">
@@ -34,7 +35,22 @@
 								<h3>Book a table</h3>
 								<div class="col-md-12">
 									<div class="form-group">
-										<input id="input_date" class="datepicker picker__input form-control" placeholder="date" name="date" type="text" value="" equired data-error="enter Date & time">
+										{% comment %} <input id="input_date" class="datepicker picker__input form-control" placeholder="date" name="date" type="text" value="" equired data-error="enter Date & time"> {% endcomment %}
+										<div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+											{{ Form.date }}
+											<div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+											  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+											</div>
+										  </div>
+										  <script>
+											$(function () {
+											  $("#datetimepicker1").datetimepicker({
+												format: 'DD/MM/YYYY HH:mm:ss',
+											}
+											  );
+											  
+											});
+										  </script>
 										<div class="help-block with-errors"></div>
 									</div>                                 
 								</div>
